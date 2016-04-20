@@ -1,0 +1,177 @@
+#!/bin/bash
+caesar(){
+(( ${#*} > 0 )) || { read arg; set - $arg; }
+(( $1 < 0 )) && num=$(($1 + 26)) || num=$1
+input=$(echo {a..z} | tr -d " ")
+output=$(echo $input | sed -r "s/^.{$num}//g")$(echo $input | sed -r "s/.{$( expr 26 - $num )}$//g")
+
+input=$input${input^^}
+output=$output${output^^}
+shift
+tr $input $output <<< "$*"
+}
+
+n00bsb_glap() {
+(( ${#*} > 0 )) || { read arg; set - $arg; }
+	(( $# != 2 )) && (( $# != 1 )) && { echo "uso: glap <parte da flag> arquivo"; return 1; }
+	grep -iEa "flag|\{|\}|${1:-flag}" $2 || strings $2 | grep -iEa "flag|\{|\}|${1:-flag}"
+}
+
+n00bsb_tobinary(){
+(( ${#*} > 0 )) || { read arg; set - $arg; }
+check=$(sed 's/./\0\n/g' <<< "$(tr -d ' ' <<< "$*")" | sort -u | grep -v "^$" | wc -l)
+(( $check != 2 )) && { echo "Informe uma string composta por dois caracteres diferentes"; return 1; }
+check=$(sed 's/./\0\n/g' <<< "$(tr -d ' ' <<< "$*")" | sort -u | grep -v "^$" | sed ':a;$!N;s/\n//;ta;')
+control=3
+while (( ${control} != 0 )) && (( ${control} != 1 )); do
+	read -p "${check:0:1} deve ser 0 ou 1? " control
+done
+(( control == 0 )) && tr -- $check 01 <<< "$*" || tr -- $check 10 <<< "$*"
+}
+
+n00bsb_tomorse(){
+(( ${#*} > 0 )) || { read arg; set - $arg; }
+check=$(sed 's/./\0\n/g' <<< "$(tr -d ' ' <<< "$*")" | sort -u | grep -v "^$" | wc -l)
+(( $check != 2 )) && { echo "Informe uma string composta por dois caracteres diferentes"; return 1; }
+check=$(sed 's/./\0\n/g' <<< "$(tr -d ' ' <<< "$*")" | sort -u | grep -v "^$" | sed ':a;$!N;s/\n//;ta;')
+control=3
+while [ "${control}" != "." ] && [ "${control}" != "-" ]; do
+	read -p "${check:0:1} deve ser . ou -? " control
+done
+[ "$control" == "." ] && tr -- $check .- <<< "$*" || tr -- $check -. <<< "$*"
+}
+
+
+chrbin() {
+	echo $(printf \\$(echo "ibase=2; obase=8; $1" | bc))
+}
+
+ordbin() {
+	a=$(printf '%d' "'$1")
+	echo "obase=2; $a" | bc
+}
+
+n00bsb_ascii2bin() {
+(( ${#*} > 0 )) || { read arg; set - $arg; }
+	echo -n $* | while IFS= read -r -n1 char
+	do
+		ordbin $char | tr -d '\n'
+		echo -n " "
+	done
+echo
+}
+
+n00bsb_bin2ascii() {
+(( ${#*} > 0 )) || { read arg; set - $arg; }
+	for bin in $*
+	do
+	chrbin $bin | tr -d '\n'
+	done
+echo
+}
+
+n00bsb_bin2hex() {
+(( ${#*} > 0 )) || { read arg; set - $arg; }
+for i in $*
+do
+	echo -n $(echo "obase=16; ibase=2; $i"|bc)
+done
+echo
+}
+
+n00bsb_hex2bin() {
+(( ${#*} > 0 )) || { read arg; set - $arg; }
+for i in $*
+do
+	echo -n $(echo "ibase=16; obase=2; ${i^^}"|bc)
+done
+echo
+}
+
+n00bsb_dec2bin() {
+(( ${#*} > 0 )) || { read arg; set - $arg; }
+echo "ibase=10; obase=2; $1" | bc
+}
+
+n00bsb_hex2dec() {
+(( ${#*} > 0 )) || { read arg; set - $arg; }
+for i in $*
+do
+	echo -n $(echo "ibase=16; ${i^^}"| bc)
+done
+echo
+}
+
+n00bsb_bin2dec(){
+(( ${#*} > 0 )) || { read arg; set - $arg; }
+	echo $((2#$1))
+}
+
+n00bsb_hex2ascii(){
+(( ${#*} > 0 )) || { read arg; set - $arg; }
+i=0
+while (( $i < ${#1} )); do
+	echo -en "\x${1:$i:2}"
+	let i+=2;
+done
+echo;
+}
+
+n00bsb_dec2hex(){
+(( ${#*} > 0 )) || { read arg; set - $arg; }
+	printf "%x\n" $*
+}
+
+n00bsb_rot(){
+(( ${#*} > 0 )) || { read arg; set - $arg; }
+for i in {1..25}; do
+	echo -n "$i: "; caesar $i "$*"
+done
+echo -n "47: "; tr '\!-~' 'P-~\!-O' <<< "$*"
+echo -n "AZ-ZA: "; tr a-zA-Z $(echo {A..Z} {a..z} | tr -d ' ' | rev) <<< "$*"
+echo -n "rev: "; rev <<< "$*"
+echo
+}
+
+
+n00bsb_morsedecode(){
+(( ${#*} > 0 )) || { read arg; set - $arg; }
+declare -A morse=( [.-]=A  [-...]=B  [-.-.]=C  [-..]=D  [.]=E  [..-.]=F  [--.]=G  [....]=H  [..]=I  [.---]=J  [-.-]=K  [.-..]=L  [--]=M  [-.]=N  [---]=O  [.--.]=P  [--.-]=Q  [.-.]=R  [...]=S  [-]=T  [..-]=U  [...-]=V  [.--]=W  [-..-]=X  [-.--]=Y  [--..]=Z  [-----]=0  [.----]=1  [..---]=2  [...--]=3  [....-]=4  [.....]=5  [-....]=6  [--...]=7  [---..]=8  [----.]=9 )
+for i in $*; do
+	echo -n "${morse[$i]}"
+done
+echo
+}
+
+n00bsb_morseencode(){
+(( ${#*} > 0 )) || { read arg; set - $arg; }
+declare -A tomorse=( [A]=.- [B]=-... [C]=-.-. [D]=-.. [E]=. [F]=..-. [G]=--. [H]=.... [I]=.. [J]=.--- [K]=-.- [L]=.-.. [M]=-- [N]=-. [O]=--- [P]=.--. [Q]=--.- [R]=.-. [S]=... [T]=- [U]=..- [V]=...- [W]=.-- [X]=-..- [Y]=-.-- [Z]=--.. [0]=----- [1]=.---- [2]=..--- [3]=...-- [4]=....- [5]=..... [6]=-.... [7]=--... [8]=---.. [9]=----. )
+texto="$*"
+for (( i=0; i<${#texto}; i++ )); do
+	char=${texto:$i:1}
+	echo -n "${tomorse[${char^^}]} ";
+done
+echo
+}
+
+n00bsb_meuip(){
+	wget -qO- ipecho.net/plain; echo
+}
+
+n00bsb_scansteg (){
+	var=$(xxd -p $1 | tr -d '\n')
+	echo -n "offset 0: " ; file $1;
+	for (( i=${2:-2}; i<$(du -b $1 | grep -Eo "[0-9]*"); i+=2 )); do 
+		echo -n "offset $i: ";
+		 echo "${var:$i:30}" | \
+		 xxd -r -p | \
+		file -; 
+	done | grep -v "stdin: data"
+}
+
+n00bsb_ascii2char () {
+(( ${#*} > 0 )) || { read arg; set - $arg; }
+for i in $*; do
+	printf "\x$(printf %x $i)"
+done
+}
