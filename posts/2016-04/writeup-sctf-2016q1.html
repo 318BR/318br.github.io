@@ -82,7 +82,7 @@
 	    <a href="../../tag/write-up.html">#write-up</a>
 
 </footer><!-- /.post-info -->                </div>
-                <h1>Ducks</h1>
+                <h1><a href="https://github.com/n00bsb/sctf/tree/master/2016q1/Ducks">Ducks</a></h1>
 <h2><a href="http://ducks.sctf.michaelz.xyz/">The ducks</a> and I have a unfinished score to settle.</h2>
 <p>Hint: If you've remember HSF, you'll know that The Ducks is unsolvable.</p>
 <p>This one was quite easy: since it gave us the <a href="http://ducks.sctf.michaelz.xyz/source.php">source code of the page</a> we could see that it uses the <a href="http://stackoverflow.com/questions/829407/what-is-so-wrong-with-extract">PHP extract()</a> function.</p>
@@ -94,6 +94,124 @@
 &lt;code&gt;sctf{maybe_i_shouldn&#39;t_have_extracted_everything_huh}&lt;/code&gt;
 &lt;/div&gt;
 </pre></div>
+
+
+<h1><a href="https://github.com/n00bsb/sctf/blob/master/2016q1/LengthyLingo/README.md">LenghtyLingo</a></h1>
+<h2>Description:</h2>
+<p>Can you crack the code? We intercepted this flag but can't seem to figure out how it was encrypted.</p>
+<p>The solution is quite simple. You have to count the length of each word, then convert it's number to ascii.
+I've came up with this one-liner:</p>
+<p><code>sed 's/, /\n/g' encrypted.dat | while read i; do printf "\x$(printf %x ${#i})"; done</code></p>
+<h1><a href="https://github.com/n00bsb/sctf/tree/master/2016q1/RainOrShine">Rain Or Shine</a></h1>
+<p>This one we couldn't crack in time, mostly because I first found a JPEG signature which turned out to be just the thumbnail of the original image, what cost us a lot of time, and also because GIMP wouldn't open layered TIFFs. </p>
+<p>Because of this, we spent a lot of time trying to manually reassemble the QR Code, which was impossible since there were overlayed layers.</p>
+<p>By the time I got access to a friend with Photoshop, the challenge was ended.</p>
+<p>Cutting to the chase: Open the <code>rain.wav</code> file in your favourite hex editor (mine is bless). Keep digging until you find a TIFF header:</p>
+<p><strong>49492a0008</strong></p>
+<p>So what we'll have to do is cut the file from this header until the end: </p>
+<p><code>xxd -p rain.wav | tr -d '\n' | grep -Eo "49492a0008[0-9a-f]*" | xxd -r -p &gt; file.tiff</code></p>
+<p>and then open it with Photoshop (GIMP apparently has some issues managing layered TIFFs), where you can see four layers and easily rearrange them.</p>
+<p>The result is a QRCode that you could read with your phone or using zbar-tools</p>
+<h1><a href="https://github.com/n00bsb/sctf/tree/master/2016q1/Verticode">Verticode</a></h1>
+<h2>Description:</h2>
+<p>Welcome to Verticode, the new method of translating text into vertical codes.</p>
+<p>Each verticode has two parts: the color shift and the code.</p>
+<p>The code takes the inputted character and translates it into an ASCII code, and then into binary, then puts that into an image in which each black pixel represents a 1 and each white pixel represents a 0.</p>
+<p>For example, A is 65 which is 1000001 in binary, B is 66 which is 1000010, and C is 67 which is 1000011, so the corresponding verticode would look like this.</p>
+<p>Except, it isn't that simple.</p>
+<p>A color shift is also integrated, which means that the color before each verticode shifts the ASCII code, by adding the number that the color corresponds to, before translating it into binary. In that case, the previous verticode could also look like this.</p>
+<p>The table for the color codes is:</p>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Color</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>Red</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Purple</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Blue</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Green</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Yellow</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Orange</td>
+</tr>
+</tbody>
+</table>
+<p>This means that a red color shift for the letter A, which is 65 + 0 = 65, would translate into 1000001 in binary; however, a green color shift for the letter A, which is 65 + 3 = 68, would translate into 1000100 in binary.</p>
+<p>Given this verticode, read the verticode into text and find the flag.</p>
+<p>Note that the flag will not be in the typical sctf{flag} format, but will be painfully obvious text. Once you find this text, you will submit it in the sctf{text} format. So, if the text you find is adunnaisawesome, you will submit it as sctf{adunnaisawesome}.</p>
+<h1>decode.sh</h1>
+<div class="codehilite" style="background: #202020"><pre style="line-height: 125%"><span></span><span style="color: #999999; font-style: italic">#!/bin/bash</span>
+<span style="color: #999999; font-style: italic"># There are a lot of temporary files created because this script was retrieved from my bash_history</span>
+<span style="color: #999999; font-style: italic">#</span>
+<span style="color: #999999; font-style: italic"># This script will beat the VertiCode level from sctf q1 2016</span>
+<span style="color: #999999; font-style: italic">#</span>
+<span style="color: #999999; font-style: italic"># by atcasanova@protonmail.ch</span>
+<span style="color: #999999; font-style: italic"># n00bsb.rocks</span>
+<span style="color: #d0d0d0">((</span> <span style="color: #40ffff">$#</span> !<span style="color: #d0d0d0">=</span> <span style="color: #3677a9">1</span> <span style="color: #d0d0d0">))</span> <span style="color: #d0d0d0">&amp;&amp;</span> <span style="color: #d0d0d0">{</span> <span style="color: #24909d">echo</span> <span style="color: #ed9d13">&quot;please specify input file&quot;</span><span style="color: #d0d0d0">;</span> <span style="color: #24909d">exit</span> 1<span style="color: #d0d0d0">;</span> <span style="color: #d0d0d0">}</span>
+
+<span style="color: #999999; font-style: italic"># constants:</span>
+<span style="color: #40ffff">line_height</span><span style="color: #d0d0d0">=</span>12
+<span style="color: #40ffff">pixel_width</span><span style="color: #d0d0d0">=</span>12
+<span style="color: #40ffff">line_width</span><span style="color: #d0d0d0">=</span>168
+<span style="color: #40ffff">color_width</span><span style="color: #d0d0d0">=</span>83
+
+<span style="color: #999999; font-style: italic"># convert png to txt using ImageMagick&#39;s convert</span>
+convert <span style="color: #40ffff">$1</span> txt: &gt; out.txt
+sed -i <span style="color: #ed9d13">&#39;1d&#39;</span> out.txt
+<span style="color: #40ffff">lines</span><span style="color: #d0d0d0">=</span><span style="color: #6ab825; font-weight: bold">$(</span>tail -1 out.txt <span style="color: #d0d0d0">|</span> cut -f2 -d, <span style="color: #d0d0d0">|</span> cut -f1 -d:<span style="color: #6ab825; font-weight: bold">)</span>
+
+<span style="color: #999999; font-style: italic"># get just one line of pixels for each real line in the image</span>
+<span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">((</span> <span style="color: #40ffff">i</span><span style="color: #d0d0d0">=</span>0<span style="color: #d0d0d0">;</span> i&lt;<span style="color: #40ffff">$lines</span><span style="color: #d0d0d0">;</span> i+<span style="color: #d0d0d0">=</span><span style="color: #40ffff">$line_height</span> <span style="color: #d0d0d0">));</span> <span style="color: #6ab825; font-weight: bold">do</span> 
+    grep -E <span style="color: #ed9d13">&quot;^[0-9]*,</span><span style="color: #40ffff">$i</span><span style="color: #ed9d13">: &quot;</span> out.txt <span style="color: #d0d0d0">;</span> 
+<span style="color: #6ab825; font-weight: bold">done</span> &gt; lines.txt
+
+<span style="color: #999999; font-style: italic"># get just one pixel per needed column in the original image</span>
+&gt;sane.txt
+<span style="color: #6ab825; font-weight: bold">for</span> i in <span style="color: #6ab825; font-weight: bold">$(</span>cat lines.txt <span style="color: #d0d0d0">|</span> cut -f2 -d, <span style="color: #d0d0d0">|</span> cut -f1 -d: <span style="color: #d0d0d0">|</span> sort -nu<span style="color: #6ab825; font-weight: bold">)</span><span style="color: #d0d0d0">;</span> <span style="color: #6ab825; font-weight: bold">do</span>
+    <span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">((</span> <span style="color: #40ffff">j</span><span style="color: #d0d0d0">=</span><span style="color: #40ffff">$color_width</span><span style="color: #d0d0d0">;</span> j&lt;<span style="color: #40ffff">$line_width</span><span style="color: #d0d0d0">;</span> j+<span style="color: #d0d0d0">=</span><span style="color: #40ffff">$pixel_width</span> <span style="color: #d0d0d0">));</span> <span style="color: #6ab825; font-weight: bold">do</span> 
+        grep <span style="color: #ed9d13">&quot;^</span><span style="color: #40ffff">$j</span><span style="color: #ed9d13">,</span><span style="color: #40ffff">$i</span><span style="color: #ed9d13">: &quot;</span> lines.txt &gt;&gt; sane.txt
+    <span style="color: #6ab825; font-weight: bold">done</span>
+<span style="color: #6ab825; font-weight: bold">done</span> 
+
+<span style="color: #999999; font-style: italic"># each &quot;line&quot; in one line</span>
+cat sane.txt <span style="color: #d0d0d0">|</span> tr -s <span style="color: #ed9d13">&#39; &#39;</span> <span style="color: #d0d0d0">|</span> sed <span style="color: #ed9d13">&#39;s/, /,/g;s/( /(/g&#39;</span> <span style="color: #d0d0d0">|</span> cut -f4 -d <span style="color: #ed9d13">&quot; &quot;</span> <span style="color: #d0d0d0">|</span> xargs -L8 &gt; end.txt
+
+<span style="color: #999999; font-style: italic"># black and white to binary</span>
+sed <span style="color: #ed9d13">&#39;s/ black/1/g;s/ white/0/g&#39;</span> end.txt <span style="color: #d0d0d0">|</span> sed <span style="color: #ed9d13">&#39;s/^[a-z]*/\0 /g&#39;</span> &gt;ideal.txt
+
+<span style="color: #999999; font-style: italic"># binary conversion, color conversion and mathematics, then print ascii code</span>
+paste -d-  &lt;<span style="color: #d0d0d0">(</span><span style="color: #6ab825; font-weight: bold">for</span> i in <span style="color: #6ab825; font-weight: bold">$(</span>cat ideal.txt <span style="color: #d0d0d0">|</span> cut -f2 -d<span style="color: #ed9d13">&quot; &quot;</span><span style="color: #6ab825; font-weight: bold">)</span><span style="color: #d0d0d0">;</span> <span style="color: #6ab825; font-weight: bold">do</span> <span style="color: #24909d">echo</span> <span style="color: #6ab825; font-weight: bold">$((</span><span style="color: #3677a9">2#</span><span style="color: #40ffff">$i</span><span style="color: #6ab825; font-weight: bold">))</span><span style="color: #d0d0d0">;</span> <span style="color: #6ab825; font-weight: bold">done</span><span style="color: #d0d0d0">)</span> ideal.txt &gt; last.txt
+<span style="color: #6ab825; font-weight: bold">for</span> i in <span style="color: #6ab825; font-weight: bold">$(</span>cat last.txt <span style="color: #d0d0d0">|</span> cut -f1 -d<span style="color: #ed9d13">&quot; &quot;</span> <span style="color: #d0d0d0">|</span> sed <span style="color: #ed9d13">&#39;s|red|0|g;s|purple|1|g;s|blue|2|g;s|green|3|g;s|yellow|4|g;s|orange|5|g&#39;</span><span style="color: #d0d0d0">|</span> bc<span style="color: #6ab825; font-weight: bold">)</span><span style="color: #d0d0d0">;</span> <span style="color: #6ab825; font-weight: bold">do</span> 
+    <span style="color: #24909d">printf</span> <span style="color: #ed9d13">&quot;\x</span><span style="color: #6ab825; font-weight: bold">$(</span><span style="color: #24909d">printf</span> %x <span style="color: #40ffff">$i</span><span style="color: #6ab825; font-weight: bold">)</span><span style="color: #ed9d13">&quot;</span><span style="color: #d0d0d0">;</span>
+<span style="color: #6ab825; font-weight: bold">done</span>
+<span style="color: #24909d">echo</span>
+</pre></div>
+
+
+<h2>Running:</h2>
+<p><code>chmod +x decode.sh</code>
+then
+<code>./decode.sh code1.png</code></p>
+<p>Sorry about the great number of temporary files, but I did this step by step on the shell :)</p>
                 </div><!-- /.entry-content -->
         </article>
 </section>
@@ -116,11 +234,11 @@
 <li><a href="../../category/wargames.html">Wargames</a></li>
 
 <li class="nav-header"><h4></i>Tags</h4></li>
-<li class="tag-[<pelican.contents.Article object at 0x7f84000e8a50>]"><a href="../../tag/ctf.html">#ctf</a></li>
-<li class="tag-[<pelican.contents.Article object at 0x7f84000b7dd0>, <pelican.contents.Article object at 0x7f840008f990>]"><a href="../../tag/overthewireorg.html">#overthewire.org</a></li>
-<li class="tag-[<pelican.contents.Article object at 0x7f84000e8a50>]"><a href="../../tag/sctf.html">#sctf</a></li>
-<li class="tag-[<pelican.contents.Article object at 0x7f84000b7dd0>, <pelican.contents.Article object at 0x7f840008f990>]"><a href="../../tag/wargames.html">#wargames</a></li>
-<li class="tag-[<pelican.contents.Article object at 0x7f84000e8a50>, <pelican.contents.Article object at 0x7f84000b7dd0>, <pelican.contents.Article object at 0x7f840008f990>]"><a href="../../tag/write-up.html">#write-up</a></li>
+<li class="tag-[<pelican.contents.Article object at 0x7fbe836c1a50>]"><a href="../../tag/ctf.html">#ctf</a></li>
+<li class="tag-[<pelican.contents.Article object at 0x7fbe8368ddd0>, <pelican.contents.Article object at 0x7fbe83669990>]"><a href="../../tag/overthewireorg.html">#overthewire.org</a></li>
+<li class="tag-[<pelican.contents.Article object at 0x7fbe836c1a50>]"><a href="../../tag/sctf.html">#sctf</a></li>
+<li class="tag-[<pelican.contents.Article object at 0x7fbe8368ddd0>, <pelican.contents.Article object at 0x7fbe83669990>]"><a href="../../tag/wargames.html">#wargames</a></li>
+<li class="tag-[<pelican.contents.Article object at 0x7fbe836c1a50>, <pelican.contents.Article object at 0x7fbe8368ddd0>, <pelican.contents.Article object at 0x7fbe83669990>]"><a href="../../tag/write-up.html">#write-up</a></li>
 
 </ul>        </div><!--/.well -->
       </div><!--/row-->
