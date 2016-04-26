@@ -260,11 +260,29 @@ then
 <h2>1. Convert the file to hex</h2>
 <p><code>xxd -p compressed.zip | tr -d "\n" &gt; hex</code></p>
 <h2>2. Make an ugly loop to isolate the JPEG markers within spaces using an uglier sed.</h2>
-<p><code>j=0; for i in $(cat hex | sed 's/e000104a/ STARTHERE/g;s/ae4260/ENDHERE /g'); do  echo $i &gt; $j.j;  let j++;  done;</code></p>
+<div class="codehilite" style="background: #202020"><pre style="line-height: 125%"><span></span><span style="color: #40ffff">j</span><span style="color: #d0d0d0">=</span>0<span style="color: #d0d0d0">;</span> 
+<span style="color: #6ab825; font-weight: bold">for</span> i in <span style="color: #6ab825; font-weight: bold">$(</span>cat hex <span style="color: #d0d0d0">|</span> sed <span style="color: #ed9d13">&#39;s/e000104a/ STARTHERE/g;s/ae4260/ENDHERE /g&#39;</span><span style="color: #6ab825; font-weight: bold">)</span><span style="color: #d0d0d0">;</span> <span style="color: #6ab825; font-weight: bold">do</span>
+    <span style="color: #24909d">echo</span> <span style="color: #40ffff">$i</span> &gt; <span style="color: #40ffff">$j</span>.j<span style="color: #d0d0d0">;</span>
+    <span style="color: #24909d">let</span> j++<span style="color: #d0d0d0">;</span>
+<span style="color: #6ab825; font-weight: bold">done</span>
+</pre></div>
+
+
 <h2>3. Loop all the files, now fixing the headers and footers, then converting back from hex to file.</h2>
-<p><code>for i in *.j ; do  sed -i 's/STARTHERE/ffd8ffe000104a/g;s/ENDHERE/ae4260/g' $i; xxd -r -p $i &gt; ${i}pg ; done;</code></p>
+<div class="codehilite" style="background: #202020"><pre style="line-height: 125%"><span></span><span style="color: #6ab825; font-weight: bold">for</span> i in *.j <span style="color: #d0d0d0">;</span> <span style="color: #6ab825; font-weight: bold">do</span>
+    sed -i <span style="color: #ed9d13">&#39;s/STARTHERE/ffd8ffe000104a/g;s/ENDHERE/ae4260/g&#39;</span> <span style="color: #40ffff">$i</span><span style="color: #d0d0d0">;</span>
+    xxd -r -p <span style="color: #40ffff">$i</span> &gt; <span style="color: #ed9d13">${</span><span style="color: #40ffff">i</span><span style="color: #ed9d13">}</span>pg<span style="color: #d0d0d0">;</span>
+<span style="color: #6ab825; font-weight: bold">done</span>
+</pre></div>
+
+
 <h2>4. For easy browsing, let's make a HTML file with all the valid JPEG files</h2>
-<p><code>for i in $(file *.jpg| grep JPEG | cut -f1 -d:); do echo "&lt;img src='$i'&gt;" &gt;&gt; index.html; done</code></p>
+<div class="codehilite" style="background: #202020"><pre style="line-height: 125%"><span></span><span style="color: #6ab825; font-weight: bold">for</span> i in <span style="color: #6ab825; font-weight: bold">$(</span>file *.jpg<span style="color: #d0d0d0">|</span> grep JPEG <span style="color: #d0d0d0">|</span> cut -f1 -d:<span style="color: #6ab825; font-weight: bold">)</span><span style="color: #d0d0d0">;</span> <span style="color: #6ab825; font-weight: bold">do</span>
+    <span style="color: #24909d">echo</span> <span style="color: #ed9d13">&quot;&lt;img src=&#39;</span><span style="color: #40ffff">$i</span><span style="color: #ed9d13">&#39;&gt;&quot;</span> &gt;&gt; index.html<span style="color: #d0d0d0">;</span>
+<span style="color: #6ab825; font-weight: bold">done</span>
+</pre></div>
+
+
 <p>As I said, we needed luck. The flag was in one of the jpeg files :)
 Take a look at 264.jpg</p>
 <hr />
@@ -290,11 +308,11 @@ Take a look at 264.jpg</p>
 <li><a href="../../category/wargames.html">Wargames</a></li>
 
 <li class="nav-header"><h4></i>Tags</h4></li>
-<li class="tag-[<pelican.contents.Article object at 0x7fd579bfda50>]"><a href="../../tag/ctf.html">#ctf</a></li>
-<li class="tag-[<pelican.contents.Article object at 0x7fd579bccdd0>, <pelican.contents.Article object at 0x7fd579adadd0>]"><a href="../../tag/overthewireorg.html">#overthewire.org</a></li>
-<li class="tag-[<pelican.contents.Article object at 0x7fd579bfda50>]"><a href="../../tag/sctf.html">#sctf</a></li>
-<li class="tag-[<pelican.contents.Article object at 0x7fd579bccdd0>, <pelican.contents.Article object at 0x7fd579adadd0>]"><a href="../../tag/wargames.html">#wargames</a></li>
-<li class="tag-[<pelican.contents.Article object at 0x7fd579bfda50>, <pelican.contents.Article object at 0x7fd579bccdd0>, <pelican.contents.Article object at 0x7fd579adadd0>]"><a href="../../tag/write-up.html">#write-up</a></li>
+<li class="tag-[<pelican.contents.Article object at 0x7ff34f1fda50>]"><a href="../../tag/ctf.html">#ctf</a></li>
+<li class="tag-[<pelican.contents.Article object at 0x7ff34f1c9dd0>, <pelican.contents.Article object at 0x7ff34f12fe50>]"><a href="../../tag/overthewireorg.html">#overthewire.org</a></li>
+<li class="tag-[<pelican.contents.Article object at 0x7ff34f1fda50>]"><a href="../../tag/sctf.html">#sctf</a></li>
+<li class="tag-[<pelican.contents.Article object at 0x7ff34f1c9dd0>, <pelican.contents.Article object at 0x7ff34f12fe50>]"><a href="../../tag/wargames.html">#wargames</a></li>
+<li class="tag-[<pelican.contents.Article object at 0x7ff34f1fda50>, <pelican.contents.Article object at 0x7ff34f1c9dd0>, <pelican.contents.Article object at 0x7ff34f12fe50>]"><a href="../../tag/write-up.html">#write-up</a></li>
 
 </ul>        </div><!--/.well -->
       </div><!--/row-->
