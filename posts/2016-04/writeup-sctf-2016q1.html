@@ -253,6 +253,21 @@ then
 <p><code>socat TCP4:problems1.2016q1.sctf.io:50000 EXEC:/full/path/to/client.sh,fdin=3,fdout=4</code></p>
 <p>Maybe you'll need to install <code>socat</code> first</p>
 <hr />
+<h1><a href="https://ctftime.org/task/2258">Failed Compression</a></h1>
+<p>This one was a pain in the *ss. I opened the file (compressed.zip, 73mb) and found a lot of JPEG JFIF broken headers, and also PNG IHDR ones.</p>
+<p>I was REALLY bored to code something nice to extract all the files, so I thought I could use some luck this time. Then I focused on the JPEG files.</p>
+<p>Before you continue, I'd like you to know that I'm not proud of the following lines ;)</p>
+<h2>1. Convert the file to hex</h2>
+<p><code>xxd -p compressed.zip | tr -d "\n" &gt; hex</code></p>
+<h2>2. Make an ugly loop to isolate the JPEG markers within spaces using an uglier sed.</h2>
+<p><code>j=0; for i in $(cat hex | sed 's/e000104a/ STARTHERE/g;s/ae4260/ENDHERE /g'); do  echo $i &gt; $j.j;  let j++;  done;</code></p>
+<h2>3. Loop all the files, now fixing the headers and footers, then converting back from hex to file.</h2>
+<p><code>for i in *.j ; do  sed -i 's/STARTHERE/ffd8ffe000104a/g;s/ENDHERE/ae4260/g' $i; xxd -r -p $i &gt; ${i}pg ; done;</code></p>
+<h2>4. For easy browsing, let's make a HTML file with all the valid JPEG files</h2>
+<p><code>for i in $(file *.jpg| grep JPEG | cut -f1 -d:); do echo "&lt;img src='$i'&gt;" &gt;&gt; index.html; done</code></p>
+<p>As I said, we needed luck. The flag was in one of the jpeg files :)
+Take a look at 264.jpg</p>
+<hr />
                 </div><!-- /.entry-content -->
         </article>
 </section>
@@ -275,11 +290,11 @@ then
 <li><a href="../../category/wargames.html">Wargames</a></li>
 
 <li class="nav-header"><h4></i>Tags</h4></li>
-<li class="tag-[<pelican.contents.Article object at 0x7fdd9c97da50>]"><a href="../../tag/ctf.html">#ctf</a></li>
-<li class="tag-[<pelican.contents.Article object at 0x7fdd9c949dd0>, <pelican.contents.Article object at 0x7fdd9c8ade50>]"><a href="../../tag/overthewireorg.html">#overthewire.org</a></li>
-<li class="tag-[<pelican.contents.Article object at 0x7fdd9c97da50>]"><a href="../../tag/sctf.html">#sctf</a></li>
-<li class="tag-[<pelican.contents.Article object at 0x7fdd9c949dd0>, <pelican.contents.Article object at 0x7fdd9c8ade50>]"><a href="../../tag/wargames.html">#wargames</a></li>
-<li class="tag-[<pelican.contents.Article object at 0x7fdd9c97da50>, <pelican.contents.Article object at 0x7fdd9c949dd0>, <pelican.contents.Article object at 0x7fdd9c8ade50>]"><a href="../../tag/write-up.html">#write-up</a></li>
+<li class="tag-[<pelican.contents.Article object at 0x7fd2af527a50>]"><a href="../../tag/ctf.html">#ctf</a></li>
+<li class="tag-[<pelican.contents.Article object at 0x7fd2af4f3dd0>, <pelican.contents.Article object at 0x7fd2af405dd0>]"><a href="../../tag/overthewireorg.html">#overthewire.org</a></li>
+<li class="tag-[<pelican.contents.Article object at 0x7fd2af527a50>]"><a href="../../tag/sctf.html">#sctf</a></li>
+<li class="tag-[<pelican.contents.Article object at 0x7fd2af4f3dd0>, <pelican.contents.Article object at 0x7fd2af405dd0>]"><a href="../../tag/wargames.html">#wargames</a></li>
+<li class="tag-[<pelican.contents.Article object at 0x7fd2af527a50>, <pelican.contents.Article object at 0x7fd2af4f3dd0>, <pelican.contents.Article object at 0x7fd2af405dd0>]"><a href="../../tag/write-up.html">#write-up</a></li>
 
 </ul>        </div><!--/.well -->
       </div><!--/row-->
