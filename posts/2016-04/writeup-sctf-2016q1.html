@@ -4,11 +4,11 @@
     <meta charset="utf-8">
     <title>Write-Up - sCTF.io - 2016Q1</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="n00bsb Brazilian ctf-team">
-    <meta name="author" content="n00bsbot">
+    <meta name="description" content="318BR Brazilian CTF-Team">
+    <meta name="author" content="318bot">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="../../theme/css/n00bsb.css" type="text/css" />
+    <link rel="stylesheet" href="../../theme/css/318br.css" type="text/css" />
 <!--    <link href="../../theme/css/pygments.css" rel="stylesheet">  -->
     <link href='https://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
 
@@ -83,7 +83,7 @@
 	    <a href="../../tag/write-up.html">#write-up</a>
 
 </footer><!-- /.post-info -->                </div>
-                <h1><a href="https://github.com/n00bsb/sctf/tree/master/2016q1/Ducks">Ducks</a></h1>
+                <h1><a href="https://github.com/318br/sctf/tree/master/2016q1/Ducks">Ducks</a></h1>
 <h2><a href="http://ducks.sctf.michaelz.xyz/">The ducks</a> and I have a unfinished score to settle.</h2>
 <p>Hint: If you've remember HSF, you'll know that The Ducks is unsolvable.</p>
 <p>This one was quite easy: since it gave us the <a href="http://ducks.sctf.michaelz.xyz/source.php">source code of the page</a> we could see that it uses the <a href="http://stackoverflow.com/questions/829407/what-is-so-wrong-with-extract">PHP extract()</a> function.</p>
@@ -98,7 +98,7 @@
 
 
 <hr />
-<h1><a href="https://github.com/n00bsb/sctf/blob/master/2016q1/LengthyLingo/README.md">LenghtyLingo</a></h1>
+<h1><a href="https://github.com/318br/sctf/blob/master/2016q1/LengthyLingo/README.md">LenghtyLingo</a></h1>
 <h2>Description:</h2>
 <p>Can you crack the code? We intercepted this flag but can't seem to figure out how it was encrypted.</p>
 <p>The solution is quite simple. You have to count the length of each word, then convert its number to ascii.
@@ -108,7 +108,7 @@ I've came up with this one-liner:</p>
 
 
 <hr />
-<h1><a href="https://github.com/n00bsb/sctf/tree/master/2016q1/RainOrShine">Rain Or Shine</a></h1>
+<h1><a href="https://github.com/318br/sctf/tree/master/2016q1/RainOrShine">Rain Or Shine</a></h1>
 <p>This one we couldn't crack in time, mostly because I first found a JPEG signature which turned out to be just the thumbnail of the original image, what cost us a lot of time, and also because GIMP wouldn't open layered TIFFs. </p>
 <p>Because of this, we spent a lot of time trying to manually reassemble the QR Code, which was impossible since there were overlayed layers.</p>
 <p>By the time I got access to a friend with Photoshop, the challenge was ended.</p>
@@ -122,7 +122,7 @@ I've came up with this one-liner:</p>
 <p>and then open it with Photoshop (GIMP apparently has some issues managing layered TIFFs), where you can see four layers and easily rearrange them.</p>
 <p>The result is a QRCode that you could read with your phone or using zbar-tools</p>
 <hr />
-<h1><a href="https://github.com/n00bsb/sctf/tree/master/2016q1/Verticode">Verticode</a></h1>
+<h1><a href="https://github.com/318br/sctf/tree/master/2016q1/Verticode">Verticode</a></h1>
 <h2>Description:</h2>
 <p>Welcome to Verticode, the new method of translating text into vertical codes.</p>
 <p>Each verticode has two parts: the color shift and the code.</p>
@@ -217,7 +217,7 @@ then
 <code>./decode.sh code1.png</code></p>
 <p>Sorry about the great number of temporary files, but I did this step by step on the shell :)</p>
 <hr />
-<h1><a href="https://github.com/n00bsb/sctf/tree/master/2016q1/Vertinet">Vertinet</a></h1>
+<h1><a href="https://github.com/318br/sctf/tree/master/2016q1/Vertinet">Vertinet</a></h1>
 <h1>Description:</h1>
 <p>This problem follows the same specifications as the previous Verticode, except that you have to solve many of them by developing a client to communicate with the server available at problems1.2016q1.sctf.io:50000. Good luck.</p>
 <h1>client.sh</h1>
@@ -302,18 +302,18 @@ Take a look at 264.jpg</p>
 <li class="nav-header"><h4>Links</h4></li>
     <li><a target="_blank" href="https://asciinema.org/~fallc0nn">Asciinema (fallc0nn)</a></li>
     <li><a target="_blank" href="https://ctftime.org/team/24500">CTF-Time</a></li>
-    <li><a target="_blank" href="https://github.com/n00bsb">Github</a></li>
+    <li><a target="_blank" href="https://github.com/318br">Github</a></li>
 
 <li class="nav-header"><h4>Categorias</h4></li>
 <li><a href="../../category/ctf.html">CTF</a></li>
 <li><a href="../../category/wargames.html">Wargames</a></li>
 
 <li class="nav-header"><h4></i>Tags</h4></li>
-<li class="tag-[<pelican.contents.Article object at 0x10fe447d0>]"><a href="../../tag/ctf.html">#ctf</a></li>
-<li class="tag-[<pelican.contents.Article object at 0x110d608d0>, <pelican.contents.Article object at 0x110d2abd0>]"><a href="../../tag/overthewireorg.html">#overthewire.org</a></li>
-<li class="tag-[<pelican.contents.Article object at 0x10fe447d0>]"><a href="../../tag/sctf.html">#sctf</a></li>
-<li class="tag-[<pelican.contents.Article object at 0x110d608d0>, <pelican.contents.Article object at 0x110d2abd0>]"><a href="../../tag/wargames.html">#wargames</a></li>
-<li class="tag-[<pelican.contents.Article object at 0x10fe447d0>, <pelican.contents.Article object at 0x110d608d0>, <pelican.contents.Article object at 0x110d2abd0>]"><a href="../../tag/write-up.html">#write-up</a></li>
+<li class="tag-[<pelican.contents.Article object at 0x105fd27d0>]"><a href="../../tag/ctf.html">#ctf</a></li>
+<li class="tag-[<pelican.contents.Article object at 0x106ef18d0>, <pelican.contents.Article object at 0x106ebcbd0>]"><a href="../../tag/overthewireorg.html">#overthewire.org</a></li>
+<li class="tag-[<pelican.contents.Article object at 0x105fd27d0>]"><a href="../../tag/sctf.html">#sctf</a></li>
+<li class="tag-[<pelican.contents.Article object at 0x106ef18d0>, <pelican.contents.Article object at 0x106ebcbd0>]"><a href="../../tag/wargames.html">#wargames</a></li>
+<li class="tag-[<pelican.contents.Article object at 0x105fd27d0>, <pelican.contents.Article object at 0x106ef18d0>, <pelican.contents.Article object at 0x106ebcbd0>]"><a href="../../tag/write-up.html">#write-up</a></li>
 
 </ul>        </div><!--/.well -->
       </div><!--/row-->
