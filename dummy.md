@@ -26,3 +26,8 @@ $ git commit -m 'comentario a respeito do post'
 $ git push origin -u master
 ```
 
+
+# Links uteis
+* http://daringfireball.net/projects/markdown/syntax
+* https://jekyllrb.com/docs/usage
+* https://www.git-tower.com/blog/git-cheat-sheet
