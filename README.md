@@ -25,3 +25,9 @@ git add .
 git commit -m comentario
 git push
 ```
+
+# Links uteis
+* http://daringfireball.net/projects/markdown/syntax
+* https://jekyllrb.com/docs/usage
+* https://www.git-tower.com/blog/git-cheat-sheet
+
