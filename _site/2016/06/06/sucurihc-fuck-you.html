@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    
+        <title>CTF-H4K - Fuck You (1stplace)</title>
+    
+
+    <meta name="description" content="Who cares?">
+
+    
+
+    <link rel="icon" href="/assets/img/favicon.png">
+    <link href='https://fonts.googleapis.com/css?family=Inconsolata:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="/assets/css/main.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/rouge.css">
+</head>
+
+<body>
+
+    <div class="wrapper">
+        <div class="post">
+    <a class="post__back" href="/">&lt;-- home</a>
+    <h1 class="post__title">CTF-H4K - Fuck You (1stplace)</h1>
+    <p class="post__date">June 6, 2016</p>
+    <div class="post__content"?>
+        <p>Nossa primeira vitória com o novo nome, não poderia ser em melhor estilo, a CTF-H4K promoveu no sábado passado (04/06) um novo CTF, desta vez apenas reverse, foram 5 desafios, compostos em sua maioria por binários windows, e nós vencemos! gostaria de parabenizar o <em>Boot Santos</em> por trazer mais uma vez bons desafios como este.</p>
+
+<hr class="codebreak" />
+
+<h1 id="obfusfail">Obfusfail</h1>
+<ul>
+  <li>Wine tá bugado!? eu avisei que um windows ia te ajudar!
+<br /><br /></li>
+</ul>
+
+<p>Esse não teve jeito, tive que usar o Ruindows, logo quando se tentava rodar o binário, fosse no wine ou mesmo no windows ele abria uma dialog informando o bloqueio de disassemble por uma ferramenta chamada Eziriz .NET Reactor, foi bem simples. realizado o download da ferramenta, foi só abrir o binário nela e a flag logo de cara aparecia.
+<img src="/assets/img/obfusfail.png" alt="Obfusfail" /></p>
+
+<hr class="codebreak" />
+
+<h1 id="elf">ELF</h1>
+<ul>
+  <li>Eu sei de suas skill então pega essa!
+<br /><br /></li>
+</ul>
+
+<p>A flag exigia apenas o basico do gdb</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>fatlips//deadcow ~/shc % gdb ./crackme
+GNU gdb <span class="o">(</span>GDB<span class="o">)</span> 7.10.1
+Copyright <span class="o">(</span>C<span class="o">)</span> 2015 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later &lt;http://gnu.org/licenses/gpl.html&gt;
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.  Type <span class="s2">"show copying"</span>
+and <span class="s2">"show warranty"</span> <span class="k">for </span>details.
+This GDB was configured as <span class="s2">"x86_64-unknown-linux-gnu"</span>.
+Type <span class="s2">"show configuration"</span> <span class="k">for </span>configuration details.
+For bug reporting instructions, please see:
+&lt;http://www.gnu.org/software/gdb/bugs/&gt;.
+Find the GDB manual and other documentation resources online at:
+&lt;http://www.gnu.org/software/gdb/documentation/&gt;.
+For <span class="nb">help</span>, <span class="nb">type</span> <span class="s2">"help"</span>.
+Type <span class="s2">"apropos word"</span> to search <span class="k">for </span>commands related to <span class="s2">"word"</span>...
+Reading symbols from ./crackme...<span class="o">(</span>no debugging symbols found<span class="o">)</span>...done.
+<span class="o">(</span>gdb<span class="o">)</span> disas main
+Dump of assembler code <span class="k">for function </span>main:
+   0x000000000040074d &lt;+0&gt;:	push   %rbp
+   0x000000000040074e &lt;+1&gt;:	mov    %rsp,%rbp
+   0x0000000000400751 &lt;+4&gt;:	push   %rbx
+   0x0000000000400752 &lt;+5&gt;:	sub    <span class="nv">$0x2a8</span>,%rsp
+   0x0000000000400759 &lt;+12&gt;:	mov    %edi,-0x2a4<span class="o">(</span>%rbp<span class="o">)</span>
+   0x000000000040075f &lt;+18&gt;:	mov    %rsi,-0x2b0<span class="o">(</span>%rbp<span class="o">)</span>
+   0x0000000000400766 &lt;+25&gt;:	mov    %fs:0x28,%rax
+   0x000000000040076f &lt;+34&gt;:	mov    %rax,-0x18<span class="o">(</span>%rbp<span class="o">)</span>
+   0x0000000000400773 &lt;+38&gt;:	xor    %eax,%eax
+   0x0000000000400775 &lt;+40&gt;:	movb   <span class="nv">$0x53</span>,-0x290<span class="o">(</span>%rbp<span class="o">)</span>
+   0x000000000040077c &lt;+47&gt;:	movb   <span class="nv">$0x48</span>,-0x28f<span class="o">(</span>%rbp<span class="o">)</span>
+   0x0000000000400783 &lt;+54&gt;:	movb   <span class="nv">$0x43</span>,-0x28e<span class="o">(</span>%rbp<span class="o">)</span>
+   0x000000000040078a &lt;+61&gt;:	movb   <span class="nv">$0x7b</span>,-0x28d<span class="o">(</span>%rbp<span class="o">)</span>
+   0x0000000000400791 &lt;+68&gt;:	movb   <span class="nv">$0x50</span>,-0x28c<span class="o">(</span>%rbp<span class="o">)</span>
+   0x0000000000400798 &lt;+75&gt;:	movb   <span class="nv">$0x65</span>,-0x28b<span class="o">(</span>%rbp<span class="o">)</span>
+   0x000000000040079f &lt;+82&gt;:	movb   <span class="nv">$0x67</span>,-0x28a<span class="o">(</span>%rbp<span class="o">)</span>
+   0x00000000004007a6 &lt;+89&gt;:	movb   <span class="nv">$0x75</span>,-0x289<span class="o">(</span>%rbp<span class="o">)</span>
+   0x00000000004007ad &lt;+96&gt;:	movb   <span class="nv">$0x65</span>,-0x288<span class="o">(</span>%rbp<span class="o">)</span>
+   0x00000000004007b4 &lt;+103&gt;:	movb   <span class="nv">$0x5f</span>,-0x287<span class="o">(</span>%rbp<span class="o">)</span>
+   0x00000000004007bb &lt;+110&gt;:	movb   <span class="nv">$0x53</span>,-0x286<span class="o">(</span>%rbp<span class="o">)</span>
+   0x00000000004007c2 &lt;+117&gt;:	movb   <span class="nv">$0x65</span>,-0x285<span class="o">(</span>%rbp<span class="o">)</span>
+   0x00000000004007c9 &lt;+124&gt;:	movb   <span class="nv">$0x75</span>,-0x284<span class="o">(</span>%rbp<span class="o">)</span>
+   0x00000000004007d0 &lt;+131&gt;:	movb   <span class="nv">$0x73</span>,-0x283<span class="o">(</span>%rbp<span class="o">)</span>
+   0x00000000004007d7 &lt;+138&gt;:	movb   <span class="nv">$0x5f</span>,-0x282<span class="o">(</span>%rbp<span class="o">)</span>
+   0x00000000004007de &lt;+145&gt;:	movb   <span class="nv">$0x50</span>,-0x281<span class="o">(</span>%rbp<span class="o">)</span>
+   0x00000000004007e5 &lt;+152&gt;:	movb   <span class="nv">$0x6f</span>,-0x280<span class="o">(</span>%rbp<span class="o">)</span>
+   0x00000000004007ec &lt;+159&gt;:	movb   <span class="nv">$0x6e</span>,-0x27f<span class="o">(</span>%rbp<span class="o">)</span>
+   0x00000000004007f3 &lt;+166&gt;:	movb   <span class="nv">$0x74</span>,-0x27e<span class="o">(</span>%rbp<span class="o">)</span>
+   0x00000000004007fa &lt;+173&gt;:	movb   <span class="nv">$0x6f</span>,-0x27d<span class="o">(</span>%rbp<span class="o">)</span>
+   0x0000000000400801 &lt;+180&gt;:	movb   <span class="nv">$0x73</span>,-0x27c<span class="o">(</span>%rbp<span class="o">)</span>
+   0x0000000000400808 &lt;+187&gt;:	movb   <span class="nv">$0x5f</span>,-0x27b<span class="o">(</span>%rbp<span class="o">)</span>
+   0x000000000040080f &lt;+194&gt;:	movb   <span class="nv">$0x65</span>,-0x27a<span class="o">(</span>%rbp<span class="o">)</span>
+   0x0000000000400816 &lt;+201&gt;:	movb   <span class="nv">$0x5f</span>,-0x279<span class="o">(</span>%rbp<span class="o">)</span>
+   0x000000000040081d &lt;+208&gt;:	movb   <span class="nv">$0x53</span>,-0x278<span class="o">(</span>%rbp<span class="o">)</span>
+   0x0000000000400824 &lt;+215&gt;:	movb   <span class="nv">$0x61</span>,-0x277<span class="o">(</span>%rbp<span class="o">)</span>
+   0x000000000040082b &lt;+222&gt;:	movb   <span class="nv">$0x69</span>,-0x276<span class="o">(</span>%rbp<span class="o">)</span>
+   0x0000000000400832 &lt;+229&gt;:	movb   <span class="nv">$0x61</span>,-0x275<span class="o">(</span>%rbp<span class="o">)</span>
+   0x0000000000400839 &lt;+236&gt;:	movb   <span class="nv">$0x5f</span>,-0x274<span class="o">(</span>%rbp<span class="o">)</span>
+   0x0000000000400840 &lt;+243&gt;:	movb   <span class="nv">$0x43</span>,-0x273<span class="o">(</span>%rbp<span class="o">)</span>
+   0x0000000000400847 &lt;+250&gt;:	movb   <span class="nv">$0x6f</span>,-0x272<span class="o">(</span>%rbp<span class="o">)</span>
+   0x000000000040084e &lt;+257&gt;:	movb   <span class="nv">$0x72</span>,-0x271<span class="o">(</span>%rbp<span class="o">)</span>
+   0x0000000000400855 &lt;+264&gt;:	movb   <span class="nv">$0x72</span>,-0x270<span class="o">(</span>%rbp<span class="o">)</span>
+   0x000000000040085c &lt;+271&gt;:	movb   <span class="nv">$0x65</span>,-0x26f<span class="o">(</span>%rbp<span class="o">)</span>
+   0x0000000000400863 &lt;+278&gt;:	movb   <span class="nv">$0x6e</span>,-0x26e<span class="o">(</span>%rbp<span class="o">)</span>
+   0x000000000040086a &lt;+285&gt;:	movb   <span class="nv">$0x64</span>,-0x26d<span class="o">(</span>%rbp<span class="o">)</span>
+   0x0000000000400871 &lt;+292&gt;:	movb   <span class="nv">$0x6f</span>,-0x26c<span class="o">(</span>%rbp<span class="o">)</span>
+   0x0000000000400878 &lt;+299&gt;:	movb   <span class="nv">$0x7d</span>,-0x26b<span class="o">(</span>%rbp<span class="o">)</span>
+   0x000000000040087f &lt;+306&gt;:	lea    -0x220<span class="o">(</span>%rbp<span class="o">)</span>,%rax
+   0x0000000000400886 &lt;+313&gt;:	add    <span class="nv">$0x1</span>,%rax
+   ...
+End of assembler dump.
+<span class="o">(</span>gdb<span class="o">)</span>
+</code></pre>
+</div>
+
+<p>de cara já da pra notar que a flag está ai, faltando apenas formatar e printar, durante o desafio pela agilidade acabei editando no vim mesmo e fazendo o parse no python</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>fatlips//deadcow ~/shc % python
+Python 3.5.1 <span class="o">(</span>default, Dec  7 2015, 12:58:09<span class="o">)</span> 
+<span class="o">[</span>GCC 5.2.0] on linux
+Type <span class="s2">"help"</span>, <span class="s2">"copyright"</span>, <span class="s2">"credits"</span> or <span class="s2">"license"</span> <span class="k">for </span>more information.
+<span class="gp">&gt;&gt;&gt; </span>flag <span class="o">=</span> <span class="s2">"</span><span class="se">\x</span><span class="s2">53</span><span class="se">\x</span><span class="s2">48</span><span class="se">\x</span><span class="s2">43</span><span class="se">\x</span><span class="s2">7b</span><span class="se">\x</span><span class="s2">50</span><span class="se">\x</span><span class="s2">65</span><span class="se">\x</span><span class="s2">67</span><span class="se">\x</span><span class="s2">75</span><span class="se">\x</span><span class="s2">65</span><span class="se">\x</span><span class="s2">5f</span><span class="se">\x</span><span class="s2">53</span><span class="se">\x</span><span class="s2">65</span><span class="se">\x</span><span class="s2">75"</span>+ <span class="se">\</span>
+<span class="s2">"</span><span class="se">\x</span><span class="s2">73</span><span class="se">\x</span><span class="s2">5f</span><span class="se">\x</span><span class="s2">50</span><span class="se">\x</span><span class="s2">6f</span><span class="se">\x</span><span class="s2">6e</span><span class="se">\x</span><span class="s2">74</span><span class="se">\x</span><span class="s2">6f</span><span class="se">\x</span><span class="s2">73</span><span class="se">\x</span><span class="s2">5f</span><span class="se">\x</span><span class="s2">65</span><span class="se">\x</span><span class="s2">5f</span><span class="se">\x</span><span class="s2">53</span><span class="se">\x</span><span class="s2">61</span><span class="se">\x</span><span class="s2">69</span><span class="se">\x</span><span class="s2">61</span><span class="se">\x</span><span class="s2">5f"</span>+ <span class="se">\</span>
+<span class="s2">"</span><span class="se">\x</span><span class="s2">43</span><span class="se">\x</span><span class="s2">6f</span><span class="se">\x</span><span class="s2">72</span><span class="se">\x</span><span class="s2">72</span><span class="se">\x</span><span class="s2">65</span><span class="se">\x</span><span class="s2">6e</span><span class="se">\x</span><span class="s2">64</span><span class="se">\x</span><span class="s2">6f</span><span class="se">\x</span><span class="s2">7d"</span>
+<span class="gp">&gt;&gt;&gt; </span>flag
+<span class="s1">'SHC{Pegue_Seus_Pontos_e_Saia_Correndo}'</span>
+<span class="gp">&gt;&gt;&gt; </span>
+</code></pre>
+</div>
+
+<p>e ai era só pontuar :D
+<br /><br /></p>
+<hr class="codebreak" />
+
+<h1 id="see">See</h1>
+<ul>
+  <li>Ghost
+<br /><br /></li>
+</ul>
+
+<p>Bem facil essa, apesar do executavel apresentar dialog solicitando username e password, pelo descritivo já dava pra imaginar o que era.</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>fatlips//deadcow ~/shc % foremost veja.exe
+Processing: veja.exe
+|<span class="k">*</span>|
+fatlips//deadcow ~/shc % feh output/jpg/00000935.jpg
+</code></pre>
+</div>
+<p>e voilá</p>
+
+<p><img src="/assets/img/flag_see.jpg" alt="flag_see" /></p>
+
+<hr class="codebreak" />
+
+<h1 id="patch">Patch</h1>
+<ul>
+  <li>Hue Designer
+<br /><br /></li>
+</ul>
+
+<p>Quando se tentava rodar o binário pelo wine, era apresentado uma dialog toda preta, com apenas um botão com “Ver Flag”, quando se clicava, era apresentado uma nova dialog escrito “Péssimo Designer” com um botão de OK, e em seguida uma nova dialog com apenas um botão de OK.</p>
+
+<p>Da forma que foi apresentado o problema, das duas uma, ou tinha a ver com o fundo preto da dialog ou era necessário um debugging mais a fundo pois provavelmente voce teria que criar algum jump para obter a flag, mas na verdade era bem mais simples do que isso</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>fatlips//deadcow ~/shc % strings patch.exe|less
+...
+TForm1
+TForm1
+arquivo
+ssimo Designer
+S01ZREtSU1NLVlJURVRMTUlaSEZFMlNLSkJKSFV...
+ZYYd
+ZYYd
+Error
+Runtime error     at 00000000
+0123456789ABCDEF
+...
+fatlips//deadcow ~/shc % <span class="nb">echo </span>S01ZREtSU1NLVlJURVRMTUlaSEZFMlNLSkJKSFVT... <span class="se">\</span>
+base64 -d | base32 | base64 -d | base32
+SHC<span class="o">{</span>Patch_1s_L1f3<span class="o">}</span>
+fatlips//deadcow ~/shc %
+</code></pre>
+</div>
+<p><strong>ps:</strong> o hash foi omitido pelo bem da formatação HUE!
+<br /><br /></p>
+<hr class="codebreak" />
+
+<h1 id="kathy">Kathy</h1>
+<ul>
+  <li>O Que achou desses Pés?
+<br /><br /></li>
+</ul>
+
+<p>Esse de longe foi o mais dificil, o problema consistia em 2 etapas distintas até que fosse encontrada a flag, na primeira analise do binário acabei encontrando um decimal que convertido apresentava uma dica.</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>fatlips//deadcow ~/shc % python2
+Python 2.7.11 <span class="o">(</span>default, Dec  6 2015, 15:43:46<span class="o">)</span> 
+<span class="o">[</span>GCC 5.2.0] on linux2
+Type <span class="s2">"help"</span>, <span class="s2">"copyright"</span>, <span class="s2">"credits"</span> or <span class="s2">"license"</span> <span class="k">for </span>more information.
+<span class="gp">&gt;&gt;&gt; </span>senha <span class="o">=</span> <span class="o">[</span> 77,85,73,84,79,76,73,71,69,73,82,79,77,65,83,86,79,76,84,65,81,...
+<span class="gp">&gt;&gt;&gt; </span><span class="s1">''</span>.join<span class="o">(</span>chr<span class="o">(</span>c<span class="o">)</span> <span class="k">for </span>c <span class="k">in </span>senha<span class="o">)</span>
+<span class="s1">'MUITOLIGEIROMASVOLTAQUEASENHA\x14\x01DECIMAL'</span>
+&gt;&gt;&gt;
+</code></pre>
+</div>
+
+<p>Bom, pela informação do decimal, ele é uma senha, mas senha do que? nós tinhamos um executavel que exibia apenas uma imagem, e o steghide exige uma senha para extrair arquivos, entao temos que ter essa imagem para tentar alguma coisa mas usar o foremost foi em vão, então tivemos que descompactar o executavel para tentar achar a imagem.</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>fatlips//deadcow ~/shc % 7z x kathy.exe
+
+7-Zip <span class="o">[</span>64] 9.38 beta  Copyright <span class="o">(</span>c<span class="o">)</span> 1999-2014 Igor Pavlov  2015-01-03
+p7zip Version 9.38.1 <span class="o">(</span><span class="nv">locale</span><span class="o">=</span>en_US.UTF-8,Utf16<span class="o">=</span>on,HugeFiles<span class="o">=</span>on,4 CPUs,ASM<span class="o">)</span>
+
+Processing archive: kathy.exe
+
+Extracting  CODE
+Extracting  DATA
+Extracting  BSS
+Extracting  .idata
+Extracting  .tls
+Extracting  .rdata
+Extracting  .reloc
+Extracting  .rsrc/0/CURSOR/1
+Extracting  .rsrc/0/CURSOR/2
+Extracting  .rsrc/0/CURSOR/3
+Extracting  .rsrc/0/CURSOR/4
+Extracting  .rsrc/0/CURSOR/5
+Extracting  .rsrc/0/CURSOR/6
+Extracting  .rsrc/0/CURSOR/7
+Extracting  .rsrc/0/BITMAP/BBABORT.bmp
+Extracting  .rsrc/0/BITMAP/BBALL.bmp
+Extracting  .rsrc/0/BITMAP/BBCANCEL.bmp
+Extracting  .rsrc/0/BITMAP/BBCLOSE.bmp
+Extracting  .rsrc/0/BITMAP/BBHELP.bmp
+Extracting  .rsrc/0/BITMAP/BBIGNORE.bmp
+Extracting  .rsrc/0/BITMAP/BBNO.bmp
+Extracting  .rsrc/0/BITMAP/BBOK.bmp
+Extracting  .rsrc/0/BITMAP/BBRETRY.bmp
+Extracting  .rsrc/0/BITMAP/BBYES.bmp
+Extracting  .rsrc/0/BITMAP/PREVIEWGLYPH.bmp
+Extracting  .rsrc/1046/ICON/1.ico
+Extracting  .rsrc/0/DIALOG/DLGTEMPLATE
+Extracting  .rsrc/0/STRING/4080
+Extracting  .rsrc/0/STRING/4081
+Extracting  .rsrc/0/STRING/4082
+Extracting  .rsrc/0/STRING/4083
+Extracting  .rsrc/0/STRING/4084
+Extracting  .rsrc/0/STRING/4085
+Extracting  .rsrc/0/STRING/4086
+Extracting  .rsrc/0/STRING/4087
+Extracting  .rsrc/0/STRING/4088
+Extracting  .rsrc/0/STRING/4089
+Extracting  .rsrc/0/STRING/4090
+Extracting  .rsrc/0/STRING/4091
+Extracting  .rsrc/0/STRING/4092
+Extracting  .rsrc/0/STRING/4093
+Extracting  .rsrc/0/STRING/4094
+Extracting  .rsrc/0/STRING/4095
+Extracting  .rsrc/0/STRING/4096
+Extracting  .rsrc/0/RCDATA/DVCLAL
+Extracting  .rsrc/0/RCDATA/PACKAGEINFO
+Extracting  .rsrc/0/RCDATA/TFORM1
+Extracting  .rsrc/0/GROUP_CURSOR/32761
+Extracting  .rsrc/0/GROUP_CURSOR/32762
+Extracting  .rsrc/0/GROUP_CURSOR/32763
+Extracting  .rsrc/0/GROUP_CURSOR/32764
+Extracting  .rsrc/0/GROUP_CURSOR/32765
+Extracting  .rsrc/0/GROUP_CURSOR/32766
+Extracting  .rsrc/0/GROUP_CURSOR/32767
+Extracting  .rsrc/1046/GROUP_ICON/MAINICON
+
+Everything is Ok
+
+Files: 55
+Size:       532936
+Compressed: 536576
+fatlips//deadcow ~/shc %
+</code></pre>
+</div>
+
+<p>Com o executavel descompactado, foi necessário achar a imagem que o binário exibia e então usar o steghide com a senha que strings no executavel mostrava.</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>fatlips//deadcow ~/shc/.rsrc/0/RCDATA % xxd -p TFORM1 | tr -d <span class="s1">'\n'</span> | <span class="se">\</span>
+grep -Eo <span class="s2">"ffd8.*ffd9"</span> | xxd -r -p &gt; flag.jpg
+fatlips//deadcow ~/shc/.rsrc/0/RCDATA % file flag.jpg
+flag.jpg: JPEG image data, JFIF standard 1.01, resolution <span class="o">(</span>DPI<span class="o">)</span>, densit..
+fatlips//deadcow ~/shc/.rsrc/0/RCDATA % cp -fr flag.png ~/shc/foot.jpg 
+fatlips//deadcow ~/shc/.rsrc/0/RCDATA % <span class="nb">cd</span> ~/shc 
+fatlips//deadcow ~/shc % steghide --extract -sf foot.jpg
+Enter passphrase: 
+Corrupt JPEG data: 75 extraneous bytes before marker 0xdb
+wrote extracted data to <span class="s2">"flag.txt"</span>.
+fatlips//deadcow ~/shc % cat flag.txt
+http://ctf.sucurihc.org/flag/fuck/p.rar
+fatlips//deadcow ~/shc % wget http://ctf.sucurihc.org/flag/fuck/p.rar
+--2016-06-07 01:08:28--  http://ctf.sucurihc.org/flag/fuck/p.rar
+Resolving ctf.sucurihc.org <span class="o">(</span>ctf.sucurihc.org<span class="o">)</span>... 104.28.16.81, 104.28.17.81
+Connecting to ctf.sucurihc.org <span class="o">(</span>ctf.sucurihc.org<span class="o">)</span>|104.28.16.81|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 54963 <span class="o">(</span>54K<span class="o">)</span> <span class="o">[</span>application/x-rar-compressed]
+Saving to: ‘p.rar’
+
+p.rar                100%[<span class="o">=====================</span>&gt;]  53.67K   153KB/s   <span class="k">in </span>0.4s 
+
+2016-06-07 01:08:29 <span class="o">(</span>153 KB/s<span class="o">)</span> - ‘p.rar’ saved <span class="o">[</span>54963/54963]
+
+fatlips//deadcow ~/shc % unrar x p.rar
+
+UNRAR 5.30 beta 4 freeware      Copyright <span class="o">(</span>c<span class="o">)</span> 1993-2015 Alexander Roshal
+
+
+Extracting from p.rar
+
+Extracting  flag.jpg                                                  OK 
+All OK
+fatlips//deadcow ~/shc % feh flag.jpg   <span class="c"># O tal pé bonito!</span>
+fatlips//deadcow ~/shc % strings flag.jpg
+...
+<span class="o">[</span><span class="s2">"GL
+kgbs
+&lt;'i|
+L&lt;}t
+]x3D
+@&gt;</span><span class="sb">`</span>;W
+<span class="o">([</span>K<span class="s2">"
+SHC{Kathy_Quer0_ver_S3u_pe!lol!slc}
+fatlips//deadcow ~/shc %
+</span></code></pre>
+</div>
+
+<p>Bang! a flag na mão heh :D
+<br /><br /></p>
+
+    </div>
+</div>
+
+    </div>
+
+</body>
+
+</html>
