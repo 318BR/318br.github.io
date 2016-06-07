@@ -18,9 +18,9 @@ $ cd blog && bundle install
 ---
 # Novo post
 ```
-$ cd blog/_post
-$ vim ano-mes-dia-titulo.md # Siga o formato de um post já existente
-$ jekyll build
+$ cd blog/_posts
+$ vim ano-mes-dia-titulo.md # Siga o formato de um post já existente!
+$ cd .. && jekyll build
 $ git add _posts
 $ git commit -m 'comentario a respeito do post'
 $ git push origin -u master
