@@ -20,3 +20,8 @@ $ jekyll server --host 0.0.0.0
 
 Post pronto, só subir as alterações com o proprio git.
 
+```
+git add .
+git commit -m comentario
+git push
+```
