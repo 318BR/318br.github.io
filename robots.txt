@@ -1,3 +1,0 @@
-User-agent: *
-Disallow: /Go-Fuck-Yourself
-Disallow: /Vai-Tomar-No-Cu
