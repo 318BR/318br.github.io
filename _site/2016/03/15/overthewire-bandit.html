@@ -37,13 +37,16 @@ Nesse post vamos postar o walkthru desse challenge.</p>
 
 <p>O level 0 é extremamente simples. Basta logar no servidor e dar um cat no arquivo readme</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">ssh bandit0@bandit.labs.overthewire.org
-cat readme</code></pre></div>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>ssh bandit0@bandit.labs.overthewire.org
+cat readme
+</code></pre>
+</div>
 
 <p>e usar a senha encontrada para dar ssh para o próximo level</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">ssh bandit1@localhost</code></pre></div>
-
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>ssh bandit1@localhost
+</code></pre>
+</div>
 <hr class="codebreak" />
 
 <h1 id="level-1">Level 1</h1>
@@ -53,13 +56,17 @@ cat readme</code></pre></div>
 <p>Ao se logar, você verá um arquivo chamado “-“. Isso mesmo, é só o famoso dash, ou traço.<br />
 De cara, todos tentariam dar um <strong>cat –</strong> ou <strong>cat -</strong>, mas não funcionaria. Alguns programas do linux adotam uma convenção de que o – sozinho significa stdout. Assim, temos duas formas de resolver o problema:</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">cat ./-
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>cat ./-
 <span class="c">#  ou</span>
-cat &lt; -</code></pre></div>
+cat &lt; -
+</code></pre>
+</div>
 
 <p>e usar a senha encontrada para dar ssh para o próximo level</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">ssh bandit2@localhost</code></pre></div>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>ssh bandit2@localhost
+</code></pre>
+</div>
 
 <hr class="codebreak" />
 
@@ -68,7 +75,9 @@ cat &lt; -</code></pre></div>
 <p>O 2 não vale nem a pena perder tempo. É um arquivo com espaços no filename, onde você deveria escapar os espaços para conseguir dar o cat.<br />
 Porém, o tab completion faz isso por você.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">cat spaces<span class="se">\ </span><span class="k">in</span><span class="se">\ </span>this<span class="se">\ </span>filename</code></pre></div>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>cat spaces<span class="se">\ </span><span class="k">in</span><span class="se">\ </span>this<span class="se">\ </span>filename
+</code></pre>
+</div>
 
 <p>novamente, use a senha para logar como bandit3.</p>
 
@@ -78,7 +87,9 @@ Porém, o tab completion faz isso por você.</p>
 
 <p>Como o dois, bem simples. Uma pasta com um arquivo oculto dentro.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">cat .hidden</code></pre></div>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>cat .hidden
+</code></pre>
+</div>
 
 <p>Agora é só fazer o login como bandit4</p>
 
@@ -91,7 +102,7 @@ Tratar arquivos que começam com dash (-) tem uma particularidade no linux. Quan
 Portanto, existe uma forma não tão conhecida de avisar ao programa em questão que você acabou de informar seus argumentos, que é utilizando dois traços (–).<br />
 Nesse nível temos os seguintes arquivos:</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">-file00
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>-file00
 -file01
 -file02
 -file03
@@ -100,12 +111,14 @@ Nesse nível temos os seguintes arquivos:</p>
 -file06
 -file07
 -file08
--file09</code></pre></div>
+-file09
+</code></pre>
+</div>
 
 <p>e se você tentar dar um simples cat em qualquer um deles, dará erro.<br />
 Então, deve utilizar a dica dos dois traços. Mas antes disso, você vai perceber que dentro da maioria dos arquivos existem strings ininteligíveis. Para evitar ter que dar cat em todos, faça:</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>file -- <span class="k">*</span>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>file -- <span class="k">*</span>
 -file00: data
 -file01: data
 -file02: data
@@ -115,13 +128,17 @@ Então, deve utilizar a dica dos dois traços. Mas antes disso, você vai perceb
 -file06: data
 -file07: ASCII text
 -file08: data
--file09: data</code></pre></div>
+-file09: data
+</code></pre>
+</div>
 
 <p>e assim saberá que a senha está no arquivo “-file07”.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">cat -- -file07
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>cat -- -file07
 <span class="c">#  ou</span>
-cat &lt; -file07</code></pre></div>
+cat &lt; -file07
+</code></pre>
+</div>
 
 <hr class="codebreak" />
 
@@ -133,12 +150,16 @@ Vou economizar na explicação dos problemas, pois todos já encontramos até aq
 A melhor forma que encontrei aqui foi listar todos os arquivos com <strong>find -type f</strong>, adicionar aspas em volta deles, para evitar problemas com espaços, com <strong>sed ‘s/^|$/\”/g’</strong> e jogar o output para o comando <strong>file —</strong> (lembram dos dois traços?).<br />
 Porém, a lista de arquivos é imensa. Como até aqui já aprendemos que a senha vem num arquivo texto, podemos usar <strong>grep ASCII</strong> na saída do file –, assim nosso universo foi reduzido a poucos arquivos.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">find -type f | sed <span class="s1">'s/^\|$/\"/g'</span>  | xargs file --  | grep ASCII</code></pre></div>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>find -type f | sed <span class="s1">'s/^\|$/\"/g'</span>  | xargs file --  | grep ASCII
+</code></pre>
+</div>
 
 <p>Com essas informações, tudo que precisamos é, depois do pipe, dar um cut, fazer novamente o truque das aspas e jogar o output para um <strong>xargs head -1</strong></p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">find -type f | sed <span class="s1">'s/^\|$/\"/g'</span>  | xargs file --  | grep ASCII | <span class="se">\ </span>
-cut -f1 -d: | sed <span class="s1">'s/^\|$/\"/g'</span> | xargs head -1 | less</code></pre></div>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>find -type f | sed <span class="s1">'s/^\|$/\"/g'</span>  | xargs file --  | grep ASCII | <span class="se">\ </span>
+cut -f1 -d: | sed <span class="s1">'s/^\|$/\"/g'</span> | xargs head -1 | less
+</code></pre>
+</div>
 
 <p>Se você prestou atenção no formato das senhas até agora, vai identificar só de olhar!</p>
 
@@ -149,7 +170,9 @@ Na página do challenge, no item “level 5 – level6” tem uma dica de ouro:<
 
 <p>Então basta fazer:</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>find -size 1033c | xargs cat</code></pre></div>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>find -size 1033c | xargs cat
+</code></pre>
+</div>
 
 <p>e correr para o abraço. E, a partir de agora, ficar olho no site!</p>
 
@@ -159,7 +182,9 @@ Na página do challenge, no item “level 5 – level6” tem uma dica de ouro:<
 
 <p>Seguindo as intruções do site, temos os atributos do arquivo:user: bandit7, group: bandit6, size: 33 bytes.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">find / -user bandit7 -group bandit6 -size 33c | xargs cat</code></pre></div>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>find / -user bandit7 -group bandit6 -size 33c | xargs cat
+</code></pre>
+</div>
 
 <hr class="codebreak" />
 
@@ -167,7 +192,9 @@ Na página do challenge, no item “level 5 – level6” tem uma dica de ouro:<
 
 <p>Instruções no site!</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">grep millionth data.txt</code></pre></div>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>grep millionth data.txt
+</code></pre>
+</div>
 
 <hr class="codebreak" />
 
@@ -175,7 +202,9 @@ Na página do challenge, no item “level 5 – level6” tem uma dica de ouro:<
 
 <p>A senha está no arquivo data.txt e é a única linha que aparece apenas uma vez</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">sort data.txt | uniq -u</code></pre></div>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sort data.txt | uniq -u
+</code></pre>
+</div>
 
 <hr class="codebreak" />
 
@@ -184,15 +213,18 @@ Na página do challenge, no item “level 5 – level6” tem uma dica de ouro:<
 <p>A senha está em uma das poucas linhas ‘legíveis’ do arquivo data.txt que começam com algumas vezes o caractere “=”<br />
 Para esse nível vamos usar pela primeira vez o comando <strong>strings</strong></p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">strings data.txt  | grep -E <span class="s2">"^=+"</span></code></pre></div>
-
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>strings data.txt  | grep -E <span class="s2">"^=+"</span>
+</code></pre>
+</div>
 <hr class="codebreak" />
 
 <h1 id="level-10">Level 10</h1>
 
 <p>A senha está no arquivo data.txt, codificado em base64</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">base64 -d &lt; data.txt</code></pre></div>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>base64 -d &lt; data.txt
+</code></pre>
+</div>
 
 <hr class="codebreak" />
 
@@ -200,8 +232,9 @@ Para esse nível vamos usar pela primeira vez o comando <strong>strings</strong>
 
 <p>O level 11 é a conhecida cifra de césar, algoritmo de rotação de caracteres.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">tr a-zA-Z n-za-mN-ZA-M &lt; data.txt</code></pre></div>
-
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>tr a-zA-Z n-za-mN-ZA-M &lt; data.txt
+</code></pre>
+</div>
 <hr class="codebreak" />
 
 <h1 id="level-12">Level 12</h1>
@@ -210,7 +243,7 @@ Para esse nível vamos usar pela primeira vez o comando <strong>strings</strong>
 Muita gente ao fazer esse nível jogava o output para algum arquivo e dava um file, para depois usar algum outro comando, salvar em outro arquivo e dar outro file, assim sucessivamente.<br />
 Mas como expliquei no level 1, podemos usar o – em alguns programas simbolizando o stdout. Então basta fazer o seguinte:</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">bandit12@melinda:~$ </span>xxd -r data.txt | file -
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">bandit12@melinda:~$ </span>xxd -r data.txt | file -
 /dev/stdin: gzip compressed data, was <span class="s2">"data2.bin"</span>, from Unix, last modified: ..
 <span class="gp">bandit12@melinda:~$ </span>xxd -r data.txt | zcat | file -
 /dev/stdin: bzip2 compressed data, block size <span class="o">=</span> 900k
@@ -233,7 +266,9 @@ bzcat | tar xO | zcat | file -
 /dev/stdin: ASCII text
 <span class="gp">bandit12@melinda:~$ </span>xxd -r data.txt | zcat | bzcat| zcat| tar xO | tar xO | <span class="se">\</span>
 bzcat | tar xO | zcat | cat
-The password is 8ZjyCRiBWFYkneahHwxCv3wb2a1ORpYL</code></pre></div>
+The password is 8ZjyCRiBWFYkneahHwxCv3wb2a1ORpYL
+</code></pre>
+</div>
 
 <hr class="codebreak" />
 
@@ -241,11 +276,15 @@ The password is 8ZjyCRiBWFYkneahHwxCv3wb2a1ORpYL</code></pre></div>
 
 <p>Fácil, né?</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">ssh -i sshkey.private bandit14@localhost</code></pre></div>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>ssh -i sshkey.private bandit14@localhost
+</code></pre>
+</div>
 
 <p>Depois de logar, não se esqueça de pegar a senha</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">cat /etc/bandit_pass/bandit14</code></pre></div>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>cat /etc/bandit_pass/bandit14
+</code></pre>
+</div>
 
 <hr class="codebreak" />
 
@@ -253,7 +292,9 @@ The password is 8ZjyCRiBWFYkneahHwxCv3wb2a1ORpYL</code></pre></div>
 
 <p>A dica no site diz que se enviarmos a senha do nível atual na porta 30000 do servidor, receberemos a senha para o proximo.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">echo</span> <span class="s2">"4wcYUJFw0k0XLShlDzztnTBHiqxU3b3e"</span> | netcat localhost 30000</code></pre></div>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="nb">echo</span> <span class="s2">"4wcYUJFw0k0XLShlDzztnTBHiqxU3b3e"</span> | netcat localhost 30000
+</code></pre>
+</div>
 
 <hr class="codebreak" />
 
@@ -261,8 +302,10 @@ The password is 8ZjyCRiBWFYkneahHwxCv3wb2a1ORpYL</code></pre></div>
 
 <p>O 15 é igual ao 14, mas via openssl</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">echo </span>BfMYroe26WYalil77FoDi9qh59eK5xNr | <span class="se">\</span>
-openssl s_client -connect localhost:30001 -ign_eof</code></pre></div>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="nb">echo </span>BfMYroe26WYalil77FoDi9qh59eK5xNr | <span class="se">\</span>
+openssl s_client -connect localhost:30001 -ign_eof
+</code></pre>
+</div>
 
 <hr class="codebreak" />
 
@@ -271,23 +314,27 @@ openssl s_client -connect localhost:30001 -ign_eof</code></pre></div>
 <p>Trabalhosa! O site informa que você deve submeter a senha atual em uma porta no localhost entre 31000 e 32000, sem saber qual é.<br />
 Recomenda que você primeiro veja quais portas estão abertas (nmap?) pra depois saber quais falam SSL e quais não falam, e então submeter a senha. Eu prefiro ganhar tempo:</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="k">for </span>i <span class="k">in</span> <span class="o">{</span>31000..32000<span class="o">}</span>; <span class="k">do
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="k">for </span>i <span class="k">in</span> <span class="o">{</span>31000..32000<span class="o">}</span>; <span class="k">do
    </span>netcat -zv localhost <span class="nv">$i</span> 2&gt;/dev/null <span class="o">&amp;&amp;</span> <span class="o">{</span>
       <span class="nb">echo </span>porta <span class="nv">$i</span> aberta;
       <span class="nb">echo</span> <span class="s2">"cluFn7wTiGryunymYOu4RcffSxQluehd"</span> | <span class="se">\</span>
       timeout 2 openssl s_client -connect localhost:<span class="nv">$i</span> -ign_eof ;
    <span class="o">}</span>;
-<span class="k">done</span></code></pre></div>
+<span class="k">done</span>
+</code></pre>
+</div>
 
 <p>Assim ele já vai enviar a string via SSL pra todas as portas abertas, depois basta você olhar o buffer do seu terminal pra encontrar a resposta.<br />
 Nesse caso, temos como retorno uma chave privada que deve ser usada para acessar o próximo nível. O problema é que não temos permissão de escrita no diretório.<br />
 Tentei salvar a key numa variavel e usar como file descriptor, mas pelo visto o sistema não permite. A solução, então, é criar no /tmp/.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">mkdir -p /tmp/318br/
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>mkdir -p /tmp/318br/
 <span class="nb">cd</span> /tmp/318br/
 vi key
 <span class="c"># (cole o conteúdo da key no arquivo)</span>
-ssh -i key bandit17@localhost</code></pre></div>
+ssh -i key bandit17@localhost
+</code></pre>
+</div>
 
 <hr class="codebreak" />
 
@@ -295,7 +342,9 @@ ssh -i key bandit17@localhost</code></pre></div>
 
 <p>A dica no site diz que a senha está na única linha que é diferente entre os arquivos passwords.new e passwords.old</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">diff passwords.<span class="k">*</span></code></pre></div>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>diff passwords.<span class="k">*</span>
+</code></pre>
+</div>
 
 <p>Quando você tentar se logar no próximo level, vai ter uma surpresa…</p>
 
@@ -306,7 +355,9 @@ ssh -i key bandit17@localhost</code></pre></div>
 <p>OOOOH! Não dá pra logar!!<br />
 Mas a essa altura do campeonato você já sabe a solução. A dica no site diz que a senha está no arquivo readme do homedir do usuário</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">ssh bandit18@localhost cat readme</code></pre></div>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>ssh bandit18@localhost cat readme
+</code></pre>
+</div>
 
 <hr class="codebreak" />
 
@@ -314,7 +365,9 @@ Mas a essa altura do campeonato você já sabe a solução. A dica no site diz q
 
 <p>Bem simples, nem sei porque está no final</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">./bandit20-do cat /etc/bandit_pass/bandit20</code></pre></div>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>./bandit20-do cat /etc/bandit_pass/bandit20
+</code></pre>
+</div>
 
 <hr class="codebreak" />
 
@@ -323,23 +376,29 @@ Mas a essa altura do campeonato você já sabe a solução. A dica no site diz q
 <p>Nesse level o enunciado diz que é preciso abrir dois shells pra passar. Mas como hackinagem pouca é bobagem, vou ensinar aqui como fazer com um shell só!<br />
 Seguindo o enunciado, teoricamente você deveria abrir um listener com netcat, por exemplo</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">nc -l 12345</code></pre></div>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>nc -l 12345
+</code></pre>
+</div>
 
 <p>Depois abrir outra sessão ssh, executar</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">./suconnect 12345</code></pre></div>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>./suconnect 12345
+</code></pre>
+</div>
 
 <p>Então, voltar ao primeiro terminal e submeter a key via listener, para que o suconnect enviasse a resposta de volta</p>
 
 <p>Muito trabalho, não?<br />
 Aqui o negócio é simples.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="o">(</span>sleep 10; <span class="nb">echo </span>GbKksEFF4yrVs6il55v6gwY5aVje5f0j<span class="o">)</span> | nc -l 12345 &amp;
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="o">(</span>sleep 10; <span class="nb">echo </span>GbKksEFF4yrVs6il55v6gwY5aVje5f0j<span class="o">)</span> | nc -l 12345 &amp;
 <span class="o">[</span>1] 8230
 ./suconnect 12345
 Read: GbKksEFF4yrVs6il55v6gwY5aVje5f0j
 Password matches, sending next password
-gE269g2h3mw3pwgrj0Ha9Uoqen1c9DGr</code></pre></div>
+gE269g2h3mw3pwgrj0Ha9Uoqen1c9DGr
+</code></pre>
+</div>
 
 <p>Deu pra entender? Na primeira linha abrimos o netcat escutando na porta 12345 e enviamos via pipe pra ele o comando agrupado entre parenteses para aguardar 10 segundos e depois enviar a key, já enviando tudo para background com o &amp; no final.<br />
 Depois disso, é só digitar o ./suconnect 12345 em menos de 10 segundos e aguardar o tempo setado que a senha vai aparecer facilmente pra você!</p>
@@ -350,18 +409,22 @@ Depois disso, é só digitar o ./suconnect 12345 em menos de 10 segundos e aguar
 
 <p>Dentro da pasta /etc/cron.d/ tem vários cronjobs de vários usuários. Nosso próximo level é o 22, nele que devemos focar.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">cat /etc/cron.d/cronjob_bandit22
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>cat /etc/cron.d/cronjob_bandit22
 <span class="k">*</span> <span class="k">*</span> <span class="k">*</span> <span class="k">*</span> <span class="k">*</span> bandit22 /usr/bin/cronjob_bandit22.sh &amp;&gt; /dev/null
 cat /usr/bin/cronjob_bandit22.sh
 <span class="c"># !/bin/bash</span>
 chmod 644 /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
-cat /etc/bandit_pass/bandit22 &gt; /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv</code></pre></div>
+cat /etc/bandit_pass/bandit22 &gt; /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+</code></pre>
+</div>
 
 <p>Analisando o código, você pode ver que a senha do bandit22 está sendo enviada para aquele arquivo de nome estranho no /tmp<br />
 É só dar um cat nele!</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">cat /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
-Yk7owGAcWjwMVRwrTesJEwB7WVOiILLI</code></pre></div>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>cat /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+Yk7owGAcWjwMVRwrTesJEwB7WVOiILLI
+</code></pre>
+</div>
 
 <hr class="codebreak" />
 
@@ -369,20 +432,24 @@ Yk7owGAcWjwMVRwrTesJEwB7WVOiILLI</code></pre></div>
 
 <p>O início é igual ao level 21. Você deve verificar o cronjob do bandit23.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c"># !/bin/bash</span>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="c"># !/bin/bash</span>
 
 <span class="nv">myname</span><span class="o">=</span><span class="k">$(</span>whoami<span class="k">)</span>
 <span class="nv">mytarget</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo </span>I am user <span class="nv">$myname</span> | md5sum | cut -d <span class="s1">' '</span> -f 1<span class="k">)</span>
 
 <span class="nb">echo</span> <span class="s2">"Copying passwordfile /etc/bandit_pass/</span><span class="nv">$myname</span><span class="s2"> to /tmp/</span><span class="nv">$mytarget</span><span class="s2">"</span>
 
-cat /etc/bandit_pass/<span class="nv">$myname</span> &gt; /tmp/<span class="nv">$mytarget</span></code></pre></div>
+cat /etc/bandit_pass/<span class="nv">$myname</span> &gt; /tmp/<span class="nv">$mytarget</span>
+</code></pre>
+</div>
 
 <p>Um poquinho de leitura de código resolve seu trabalho:</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">myname</span><span class="o">=</span>bandit23
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="nv">myname</span><span class="o">=</span>bandit23
 cat /tmp/<span class="k">$(</span><span class="nb">echo </span>I am user <span class="nv">$myname</span> | md5sum | cut -d <span class="s1">' '</span> -f 1<span class="k">)</span>
-jc1udXuA1tiHqjIsL8yaapX5XIAI6i0n</code></pre></div>
+jc1udXuA1tiHqjIsL8yaapX5XIAI6i0n
+</code></pre>
+</div>
 
 <hr class="codebreak" />
 
@@ -392,12 +459,14 @@ jc1udXuA1tiHqjIsL8yaapX5XIAI6i0n</code></pre></div>
 Você pode ver no script que ele executa que ele procura arquivos em uma determinada pasta e executa tudo que estiver la a todo minuto<br />
 Então é simples!</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">cd</span> /var/spool/bandit24
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="nb">cd</span> /var/spool/bandit24
 <span class="nb">echo</span> <span class="s2">"cat /etc/bandit_pass/bandit24 &gt; /tmp/318br.bandit24"</span> &gt; script.sh
 chmod +x script.sh
 <span class="c">#  agora basta esperar virar para o próximo minuto e</span>
 cat /tmp/318br.bandit24
-UoMYTrfrBFHyQXmg6gzctqAwOmw1IohZ</code></pre></div>
+UoMYTrfrBFHyQXmg6gzctqAwOmw1IohZ
+</code></pre>
+</div>
 
 <hr class="codebreak" />
 
@@ -405,9 +474,11 @@ UoMYTrfrBFHyQXmg6gzctqAwOmw1IohZ</code></pre></div>
 
 <p>Brute Force!</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="k">for </span>i <span class="k">in</span> <span class="o">{</span>0000..9999<span class="o">}</span>; <span class="k">do
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="k">for </span>i <span class="k">in</span> <span class="o">{</span>0000..9999<span class="o">}</span>; <span class="k">do
    </span><span class="nb">echo</span>  <span class="s2">"UoMYTrfrBFHyQXmg6gzctqAwOmw1IohZ </span><span class="nv">$i</span><span class="s2">"</span>; <span class="k">done</span> | <span class="se">\</span>
-   netcat localhost 30002 | grep bandit25</code></pre></div>
+   netcat localhost 30002 | grep bandit25
+</code></pre>
+</div>
 
 <p>Dentro do loop geramos a lista com a senha do level 24 combinada com todas as combinações de 4 dígitos possíveis, e depois de pronta, jogamos essa lista via pipe pro netcat.<br />
 Pode ser preciso rodar o comando algumas vezes, porque aparentemente o daemon não aguenta a pressão, mas é só insistir duas ou três vezes q vai dar certo.</p>
@@ -429,7 +500,9 @@ Digite esc, depois <strong>v</strong>.<br />
 O arquivo será aberto no vi. Agora você só precisa digitar esc, e depois: <strong>e: /etc/bandit_pass/bandit26</strong> e enter.<br />
 O arquivo bandit26 aparecerá com a senha.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">5czgV9L3Xx8JPOyRbXh6lQbmIOWvPT6Z</code></pre></div>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>5czgV9L3Xx8JPOyRbXh6lQbmIOWvPT6Z
+</code></pre>
+</div>
 
 <p>Como o level 27 ainda não existe, acabamos de bater o desafio BANDIT do Overthewire!!</p>
 
