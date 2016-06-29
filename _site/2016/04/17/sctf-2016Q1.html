@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    
+        <title>sCTF.io - 2016Q1</title>
+    
+
+    <meta name="description" content="Who cares?">
+
+    
+
+    <link rel="icon" href="/assets/img/favicon.png">
+    <link href='https://fonts.googleapis.com/css?family=Inconsolata:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="/assets/css/main.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/rouge.css">
+</head>
+
+<body>
+
+    <div class="wrapper">
+        <div class="post">
+    <a class="post__back" href="/">&lt;-- home</a>
+    <h1 class="post__title">sCTF.io - 2016Q1</h1>
+    <p class="post__date">April 17, 2016</p>
+    <div class="post__content"?>
+        <h1 id="duckshttpsgithubcom318brsctftreemaster2016q1ducks"><a href="https://github.com/318br/sctf/tree/master/2016q1/Ducks">Ducks</a></h1>
+
+<h2 id="the-duckshttpduckssctfmichaelzxyz-and-i-have-a-unfinished-score-to-settle"><a href="http://ducks.sctf.michaelz.xyz/">The ducks</a> and I have a unfinished score to settle.</h2>
+
+<ul>
+  <li>Hint: If you’ve remember HSF, you’ll know that The Ducks is unsolvable.</li>
+</ul>
+
+<p>This one was quite easy: since it gave us the <a href="http://ducks.sctf.michaelz.xyz/source.php">source code of the page</a> we could see that it uses the <a href="http://stackoverflow.com/questions/829407/what-is-so-wrong-with-extract">PHP extract()</a> function.</p>
+
+<p>Our goal was then to send a POST that would override the <code class="highlighter-rouge">thepassword_123</code> variable:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>wget -qO- --post-data="pass=abc&amp;thepassword_123=abc" \
+http://ducks.sctf.michaelz.xyz/
+</code></pre>
+</div>
+
+<p>and within the output, there it is:</p>
+
+<div class="language-html highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;h1&gt;</span>The Ducks<span class="nt">&lt;/h1&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"alert alert-success"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;code&gt;</span>sctf{maybe_i_shouldn't_have_extracted_everything_huh}<span class="nt">&lt;/code&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</code></pre>
+</div>
+
+<hr class="codebreak" />
+
+<h1 id="lenghtylingohttpsgithubcom318brsctfblobmaster2016q1lengthylingoreadmemd"><a href="https://github.com/318br/sctf/blob/master/2016q1/LengthyLingo/README.md">LenghtyLingo</a></h1>
+
+<ul>
+  <li>Can you crack the code? We intercepted this flag but can’t seem to figure out how it was encrypted.</li>
+</ul>
+
+<p>The solution is quite simple. You have to count the length of each word, then convert its number to ascii.
+I’ve came up with this one-liner:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sed <span class="s1">'s/, /\n/g'</span> encrypted.dat | <span class="k">while </span><span class="nb">read </span>i; <span class="k">do </span><span class="nb">printf</span> <span class="s2">"</span><span class="se">\x</span><span class="k">$(</span><span class="nb">printf</span> %x <span class="k">${#</span><span class="nv">i</span><span class="k">})</span><span class="s2">"</span>; <span class="k">done</span>
+</code></pre>
+</div>
+
+<hr class="codebreak" />
+
+<h1 id="rain-or-shinehttpsgithubcom318brsctftreemaster2016q1rainorshine"><a href="https://github.com/318br/sctf/tree/master/2016q1/RainOrShine">Rain Or Shine</a></h1>
+
+<p>This one we couldn’t crack in time, mostly because I first found a JPEG signature which turned out to be just the thumbnail of the original image, what cost us a lot of time, and also because GIMP wouldn’t open layered TIFFs.</p>
+
+<p>Because of this, we spent a lot of time trying to manually reassemble the QR Code, which was impossible since there were overlayed layers.</p>
+
+<p>By the time I got access to a friend with Photoshop, the challenge was ended.</p>
+
+<p>Cutting to the chase: Open the <code class="highlighter-rouge">rain.wav</code> file in your favourite hex editor (mine is bless). Keep digging until you find a TIFF header:</p>
+
+<p><strong>49492a0008</strong></p>
+
+<p>So what we’ll have to do is cut the file from this header until the end:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>xxd -p rain.wav | tr -d <span class="s1">'\n'</span> | grep -Eo <span class="s2">"49492a0008[0-9a-f]*"</span> | xxd -r -p &gt; file.tiff
+</code></pre>
+</div>
+<p>and then open it with Photoshop (GIMP apparently has some issues managing layered TIFFs), where you can see four layers and easily rearrange them.</p>
+
+<p>The result is a QRCode that you could read with your phone or using zbar-tools</p>
+
+<hr class="codebreak" />
+
+<h1 id="verticodehttpsgithubcom318brsctftreemaster2016q1verticode"><a href="https://github.com/318br/sctf/tree/master/2016q1/Verticode">Verticode</a></h1>
+<ul>
+  <li>Welcome to Verticode, the new method of translating text into vertical codes.</li>
+</ul>
+
+<p>Each verticode has two parts: the color shift and the code.</p>
+
+<p>The code takes the inputted character and translates it into an ASCII code, and then into binary, then puts that into an image in which each black pixel represents a 1 and each white pixel represents a 0.</p>
+
+<p>For example, A is 65 which is 1000001 in binary, B is 66 which is 1000010, and C is 67 which is 1000011, so the corresponding verticode would look like this.</p>
+
+<p>Except, it isn’t that simple.</p>
+
+<p>A color shift is also integrated, which means that the color before each verticode shifts the ASCII code, by adding the number that the color corresponds to, before translating it into binary. In that case, the previous verticode could also look like this.</p>
+
+<p>The table for the color codes is:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Value</th>
+      <th>Color</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>Red</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>Purple</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Blue</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>Green</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>Yellow</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>Orange</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><br /><br />
+This means that a red color shift for the letter A, which is 65 + 0 = 65, would translate into 1000001 in binary; however, a green color shift for the letter A, which is 65 + 3 = 68, would translate into 1000100 in binary.</p>
+
+<p>Given this verticode, read the verticode into text and find the flag.</p>
+
+<p>Note that the flag will not be in the typical sctf{flag} format, but will be painfully obvious text. Once you find this text, you will submit it in the sctf{text} format. So, if the text you find is adunnaisawesome, you will submit it as sctf{adunnaisawesome}.</p>
+
+<h1 id="decodesh">decode.sh</h1>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+<span class="o">((</span> <span class="nv">$# </span>!<span class="o">=</span> 1 <span class="o">))</span> <span class="o">&amp;&amp;</span> <span class="o">{</span> <span class="nb">echo</span> <span class="s2">"please specify input file"</span>; <span class="nb">exit </span>1; <span class="o">}</span>
+
+<span class="c"># constants:</span>
+<span class="nv">line_height</span><span class="o">=</span>12
+<span class="nv">pixel_width</span><span class="o">=</span>12
+<span class="nv">line_width</span><span class="o">=</span>168
+<span class="nv">color_width</span><span class="o">=</span>83
+
+<span class="c"># convert png to txt using ImageMagick's convert</span>
+convert <span class="nv">$1</span> txt: &gt; out.txt
+sed -i <span class="s1">'1d'</span> out.txt
+<span class="nv">lines</span><span class="o">=</span><span class="k">$(</span>tail -1 out.txt | cut -f2 -d, | cut -f1 -d:<span class="k">)</span>
+
+<span class="c"># get just one line of pixels for each real line in the image</span>
+<span class="k">for</span> <span class="o">((</span> <span class="nv">i</span><span class="o">=</span>0; i&lt;<span class="nv">$lines</span>; i+<span class="o">=</span><span class="nv">$line_height</span> <span class="o">))</span>; <span class="k">do 
+	</span>grep -E <span class="s2">"^[0-9]*,</span><span class="nv">$i</span><span class="s2">: "</span> out.txt ; 
+<span class="k">done</span> &gt; lines.txt
+
+<span class="c"># get just one pixel per needed column in the original image</span>
+&gt;sane.txt
+<span class="k">for </span>i <span class="k">in</span> <span class="k">$(</span>cat lines.txt | cut -f2 -d, | cut -f1 -d: | sort -nu<span class="k">)</span>; <span class="k">do
+	for</span> <span class="o">((</span> <span class="nv">j</span><span class="o">=</span><span class="nv">$color_width</span>; j&lt;<span class="nv">$line_width</span>; j+<span class="o">=</span><span class="nv">$pixel_width</span> <span class="o">))</span>; <span class="k">do 
+		</span>grep <span class="s2">"^</span><span class="nv">$j</span><span class="s2">,</span><span class="nv">$i</span><span class="s2">: "</span> lines.txt &gt;&gt; sane.txt
+	<span class="k">done
+done</span> 
+
+<span class="c"># each "line" in one line</span>
+cat sane.txt | tr -s <span class="s1">' '</span> | sed <span class="s1">'s/, /,/g;s/( /(/g'</span> | cut -f4 -d <span class="s2">" "</span> | <span class="se">\</span>
+  xargs -L8 &gt; end.txt
+
+<span class="c"># black and white to binary</span>
+sed <span class="s1">'s/ black/1/g;s/ white/0/g'</span> end.txt | sed <span class="s1">'s/^[a-z]*/\0 /g'</span> &gt;ideal.txt
+
+<span class="c"># binary conversion, color conversion and mathematics, then print ascii code</span>
+paste -d-  &lt;<span class="o">(</span><span class="k">for </span>i <span class="k">in</span> <span class="k">$(</span>cat ideal.txt | cut -f2 -d<span class="s2">" "</span><span class="k">)</span>; <span class="k">do </span><span class="nb">echo</span> <span class="k">$((</span><span class="m">2</span><span class="c">#$i)); done)\</span>
+  ideal.txt &gt; last.txt
+<span class="k">for </span>i <span class="k">in</span> <span class="k">$(</span>cat last.txt | cut -f1 -d<span class="s2">" "</span> | <span class="se">\</span>
+ sed <span class="s1">'s|red|0|g;s|purple|1|g;s|blue|2|g;s|green|3|g;s|yellow|4|g;s|orange|5|g'</span>| bc<span class="k">)</span>; <span class="k">do 
+	</span><span class="nb">printf</span> <span class="s2">"</span><span class="se">\x</span><span class="k">$(</span><span class="nb">printf</span> %x <span class="nv">$i</span><span class="k">)</span><span class="s2">"</span>;
+<span class="k">done
+</span><span class="nb">echo</span>
+</code></pre>
+</div>
+
+<h2 id="running">Running:</h2>
+<p><code class="highlighter-rouge">chmod +x decode.sh</code>
+then
+<code class="highlighter-rouge">./decode.sh code1.png</code></p>
+
+<p>Sorry about the great number of temporary files, but I did this step by step on the shell :)</p>
+
+<hr class="codebreak" />
+
+<h1 id="vertinethttpsgithubcom318brsctftreemaster2016q1vertinet"><a href="https://github.com/318br/sctf/tree/master/2016q1/Vertinet">Vertinet</a></h1>
+
+<ul>
+  <li>This problem follows the same specifications as the previous Verticode, except that you have to solve many of them by developing a client to communicate with the server available at problems1.2016q1.sctf.io:50000. Good luck.</li>
+</ul>
+
+<h1 id="clientsh">client.sh</h1>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="nv">start</span><span class="o">=</span>0;
+<span class="nv">print</span><span class="o">=</span>0;
+<span class="k">while </span><span class="nb">read</span> -n1 char;
+<span class="k">do</span>
+		<span class="o">((</span> <span class="nv">$print</span> <span class="o">==</span> 1 <span class="o">))</span> <span class="o">&amp;&amp;</span> <span class="nb">echo</span> -n <span class="nv">$char</span>;
+		<span class="k">if</span> <span class="o">[</span> <span class="s2">"</span><span class="nv">$char</span><span class="s2">"</span> <span class="o">==</span> <span class="s2">","</span> <span class="o">]</span>; <span class="k">then
+			</span><span class="nv">start</span><span class="o">=</span>1; <span class="k">continue</span>;
+ 		<span class="k">fi
+		if</span> <span class="o">[</span> <span class="s2">"</span><span class="nv">$char</span><span class="s2">"</span> <span class="o">==</span> <span class="s2">"'"</span> <span class="o">]</span>; <span class="k">then
+			</span><span class="nv">start</span><span class="o">=</span>0;
+		<span class="k">fi</span>
+		<span class="o">((</span> <span class="nv">$abriu</span> <span class="o">==</span> 1<span class="o">))</span> <span class="o">&amp;&amp;</span> <span class="o">{</span>
+			resp+<span class="o">=</span><span class="nv">$char</span>; 
+		<span class="o">}</span>
+		<span class="k">if</span> <span class="o">((</span> <span class="k">${#</span><span class="nv">resp</span><span class="k">}</span> &gt; 1500 <span class="o">))</span> <span class="o">&amp;&amp;</span> <span class="o">((</span> <span class="nv">$abriu</span> <span class="o">==</span> 0 <span class="o">))</span>; <span class="k">then
+			</span><span class="nb">echo</span> -n <span class="s2">"</span><span class="k">${</span><span class="nv">resp</span><span class="k">}</span><span class="s2">"</span> | base64 -d &gt;/dev/null <span class="o">&amp;&amp;</span> <span class="o">{</span>
+				<span class="nb">echo</span> -n <span class="s2">"</span><span class="k">${</span><span class="nv">resp</span><span class="k">}</span><span class="s2">"</span> | base64 -d &gt; file.png
+				<span class="nv">print</span><span class="o">=</span>1;
+				<span class="nv">answer</span><span class="o">=</span><span class="k">$(</span>../Verticode/decode.sh file.png<span class="k">)</span>
+				<span class="nb">echo</span> -n <span class="nv">$answer</span> &gt;&amp;4
+				<span class="nv">resp</span><span class="o">=</span>
+			<span class="o">}</span> <span class="o">||</span> <span class="nv">print</span><span class="o">=</span>0;
+		<span class="k">fi
+done</span> &lt;&amp;3
+</code></pre>
+</div>
+
+<h2 id="running-1">Running:</h2>
+
+<p><code class="highlighter-rouge">chmod +x client.sh</code></p>
+
+<p>then</p>
+
+<p><code class="highlighter-rouge">socat TCP4:problems1.2016q1.sctf.io:50000 EXEC:/full/path/to/client.sh,fdin=3,fdout=4</code></p>
+
+<p>Maybe you’ll need to install <code class="highlighter-rouge">socat</code> first</p>
+
+<hr class="codebreak" />
+
+<h1 id="failed-compressionhttpsctftimeorgtask2258"><a href="https://ctftime.org/task/2258">Failed Compression</a></h1>
+
+<p>This one was a pain in the *ss. I opened the file (compressed.zip, 73mb) and found a lot of JPEG JFIF broken headers, and also PNG IHDR ones.</p>
+
+<p>I was REALLY bored to code something nice to extract all the files, so I thought I could use some luck this time. Then I focused on the JPEG files.</p>
+
+<p>Before you continue, I’d like you to know that I’m not proud of the following lines ;)</p>
+
+<h2 id="convert-the-file-to-hex">1. Convert the file to hex</h2>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>xxd -p compressed.zip | tr -d <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span> &gt; hex
+</code></pre>
+</div>
+
+<h2 id="make-an-ugly-loop-to-isolate-the-jpeg-markers-within-spaces-using-an-uglier-sed">2. Make an ugly loop to isolate the JPEG markers within spaces using an uglier sed.</h2>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="nv">j</span><span class="o">=</span>0; 
+<span class="k">for </span>i <span class="k">in</span> <span class="k">$(</span>cat hex | sed <span class="s1">'s/e000104a/ STARTHERE/g;s/ae4260/ENDHERE /g'</span><span class="k">)</span>; <span class="k">do
+	</span><span class="nb">echo</span> <span class="nv">$i</span> &gt; <span class="nv">$j</span>.j;
+	<span class="nb">let </span>j++;
+<span class="k">done</span>
+</code></pre>
+</div>
+
+<h2 id="loop-all-the-files-now-fixing-the-headers-and-footers-then-converting-back-from-hex-to-file">3. Loop all the files, now fixing the headers and footers, then converting back from hex to file.</h2>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="k">for </span>i <span class="k">in</span> <span class="k">*</span>.j ; <span class="k">do
+	</span>sed -i <span class="s1">'s/STARTHERE/ffd8ffe000104a/g;s/ENDHERE/ae4260/g'</span> <span class="nv">$i</span>;
+	xxd -r -p <span class="nv">$i</span> &gt; <span class="k">${</span><span class="nv">i</span><span class="k">}</span>pg;
+<span class="k">done</span>
+</code></pre>
+</div>
+
+<h2 id="for-easy-browsing-lets-make-a-html-file-with-all-the-valid-jpeg-files">4. For easy browsing, let’s make a HTML file with all the valid JPEG files</h2>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="k">for </span>i <span class="k">in</span> <span class="k">$(</span>file <span class="k">*</span>.jpg| grep JPEG | cut -f1 -d:<span class="k">)</span>; <span class="k">do
+	</span><span class="nb">echo</span> <span class="s2">"&lt;img src='</span><span class="nv">$i</span><span class="s2">'&gt;"</span> &gt;&gt; index.html;
+<span class="k">done</span>
+</code></pre>
+</div>
+
+<p>As I said, we needed luck. The flag was in one of the jpeg files :)
+Take a look at 264.jpg</p>
+
+    </div>
+</div>
+
+    </div>
+
+</body>
+
+</html>
