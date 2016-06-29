@@ -7,7 +7,7 @@ google_verification: null
 # File management
 include: [".htaccess"]
 exclude: ["README.md", "LICENSE"]
-#tag_dir: tags
+tag_dir: tags
 
 # Sass
 sass:
