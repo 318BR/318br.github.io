@@ -5,7 +5,7 @@ $ cd ~/.rbenv && src/configure && make -C src
 $ echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bash_profile
 $ git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
 $ source ~/.bash_profile
-$ rbenv install 1.9.3-p194
+$ rbenv install 2.3.1
 ```
 ---
 # Clonar blog

@@ -228,10 +228,10 @@ then
 		if</span> <span class="o">[</span> <span class="s2">"</span><span class="nv">$char</span><span class="s2">"</span> <span class="o">==</span> <span class="s2">"'"</span> <span class="o">]</span>; <span class="k">then
 			</span><span class="nv">start</span><span class="o">=</span>0;
 		<span class="k">fi</span>
-		<span class="o">((</span> <span class="nv">$abriu</span> <span class="o">==</span> 1<span class="o">))</span> <span class="o">&amp;&amp;</span> <span class="o">{</span>
+		<span class="o">((</span> <span class="nv">$start</span> <span class="o">==</span> 1<span class="o">))</span> <span class="o">&amp;&amp;</span> <span class="o">{</span>
 			resp+<span class="o">=</span><span class="nv">$char</span>; 
 		<span class="o">}</span>
-		<span class="k">if</span> <span class="o">((</span> <span class="k">${#</span><span class="nv">resp</span><span class="k">}</span> &gt; 1500 <span class="o">))</span> <span class="o">&amp;&amp;</span> <span class="o">((</span> <span class="nv">$abriu</span> <span class="o">==</span> 0 <span class="o">))</span>; <span class="k">then
+		<span class="k">if</span> <span class="o">((</span> <span class="k">${#</span><span class="nv">resp</span><span class="k">}</span> &gt; 1500 <span class="o">))</span> <span class="o">&amp;&amp;</span> <span class="o">((</span> <span class="nv">$start</span> <span class="o">==</span> 0 <span class="o">))</span>; <span class="k">then
 			</span><span class="nb">echo</span> -n <span class="s2">"</span><span class="k">${</span><span class="nv">resp</span><span class="k">}</span><span class="s2">"</span> | base64 -d &gt;/dev/null <span class="o">&amp;&amp;</span> <span class="o">{</span>
 				<span class="nb">echo</span> -n <span class="s2">"</span><span class="k">${</span><span class="nv">resp</span><span class="k">}</span><span class="s2">"</span> | base64 -d &gt; file.png
 				<span class="nv">print</span><span class="o">=</span>1;
